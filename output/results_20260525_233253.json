@@ -1,0 +1,94 @@
+{
+  "video_url": "https://www.douyin.com/video/7643026643757321491",
+  "scraped_at": "2026-05-25T23:32:53.823102+08:00",
+  "queried_targets": [
+    "85162545624"
+  ],
+  "total_comments_scraped": 51,
+  "total_replies_scraped": 19,
+  "data_source": "api",
+  "matched_comments": [
+    {
+      "cid": "7643091872550601487",
+      "text": "告诉心中之城，有的是人做[黄脸干杯]",
+      "images": [],
+      "stickers": [],
+      "digg_count": 99,
+      "create_time": 1779546001,
+      "ip_label": "上海",
+      "reply_comment_total": 9,
+      "reply_id": "0",
+      "reply_to_reply_id": "0",
+      "nickname": "远大前程",
+      "uid": "64283653098",
+      "unique_id": "",
+      "short_id": "49107300",
+      "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813_oABBJLgJAAPiGA8w5vvCgEAAbIaYgXi9vwCkI.jpeg?from=2064092626",
+      "source": "api",
+      "replies": [
+        {
+          "cid": "7643129168859988785",
+          "text": "固定ktv",
+          "images": [],
+          "stickers": [],
+          "digg_count": 1,
+          "create_time": 1779554686,
+          "ip_label": "广东",
+          "reply_comment_total": 0,
+          "reply_id": "7643091872550601487",
+          "reply_to_reply_id": "0",
+          "nickname": "江辞",
+          "uid": "96653722641",
+          "unique_id": "X986757756",
+          "short_id": "832527212",
+          "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/mosaic-legacy_fe0900067c8311d45f95.jpeg?from=2064092626",
+          "source": "api",
+          "reply_to_comment_id": "7643091872550601487",
+          "reply_to_nickname": "远大前程",
+          "replies": [
+            {
+              "cid": "7643149041903092538",
+              "text": "固定kfc",
+              "images": [],
+              "stickers": [],
+              "digg_count": 0,
+              "create_time": 1779559313,
+              "ip_label": "山西",
+              "reply_comment_total": 0,
+              "reply_id": "7643091872550601487",
+              "reply_to_reply_id": "7643129168859988785",
+              "nickname": "Yzoejabcdefg",
+              "uid": "4232447006608824",
+              "unique_id": "85162545624",
+              "short_id": "85162545624",
+              "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_bedd1bd299c4b52e8120540323127b73.jpeg?from=2064092626",
+              "source": "api",
+              "reply_to_comment_id": "7643091872550601487",
+              "reply_to_nickname": "远大前程"
+            }
+          ]
+        },
+        {
+          "cid": "7643149015265854267",
+          "text": "固定npc",
+          "images": [],
+          "stickers": [],
+          "digg_count": 0,
+          "create_time": 1779559307,
+          "ip_label": "山西",
+          "reply_comment_total": 0,
+          "reply_id": "7643091872550601487",
+          "reply_to_reply_id": "0",
+          "nickname": "Yzoejabcdefg",
+          "uid": "4232447006608824",
+          "unique_id": "85162545624",
+          "short_id": "85162545624",
+          "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_bedd1bd299c4b52e8120540323127b73.jpeg?from=2064092626",
+          "source": "api",
+          "reply_to_comment_id": "7643091872550601487",
+          "reply_to_nickname": "远大前程"
+        }
+      ]
+    }
+  ]
+}

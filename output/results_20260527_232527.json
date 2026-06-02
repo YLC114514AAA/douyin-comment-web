@@ -1,0 +1,96 @@
+{
+  "video_url": "https://www.douyin.com/video/7642989080074030390",
+  "scraped_at": "2026-05-27T23:25:27.025600+08:00",
+  "queried_targets": [
+    "dy17lgs1pv9l"
+  ],
+  "total_comments_scraped": 24,
+  "total_replies_scraped": 12,
+  "data_source": "api",
+  "matched_comments": [
+    {
+      "cid": "7643400932566516529",
+      "text": "你要是不更新，你就是第二个凯蒂",
+      "images": [],
+      "stickers": [],
+      "digg_count": 1,
+      "create_time": 1779617959,
+      "ip_label": "新疆",
+      "reply_comment_total": 3,
+      "reply_id": "0",
+      "reply_to_reply_id": "0",
+      "nickname": "你的后面我在呢？",
+      "uid": "4454862498830391",
+      "unique_id": "dy17lgs1pv9l",
+      "short_id": "3543989215",
+      "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813c000-ce_ooonwKDAAInAFA9DSefE9ORDNiuFICARAEEeME.jpeg?from=2064092626",
+      "source": "api",
+      "replies": [
+        {
+          "cid": "7643412692254622501",
+          "text": "哈哈哈，正在写啦，明天就出来",
+          "images": [],
+          "stickers": [],
+          "digg_count": 0,
+          "create_time": 1779620697,
+          "ip_label": "江苏",
+          "reply_comment_total": 0,
+          "reply_id": "7643400932566516529",
+          "reply_to_reply_id": "0",
+          "nickname": "讲电影的老K",
+          "uid": "7616341058514994235",
+          "unique_id": "23150720611",
+          "short_id": "23150720611",
+          "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813c000-ce_oQw1A0nAB9QiaibPHxMAo8EMRIAAQkChhaAcP.jpeg?from=2064092626",
+          "source": "api",
+          "reply_to_comment_id": "7643400932566516529",
+          "reply_to_nickname": "你的后面我在呢？",
+          "replies": [
+            {
+              "cid": "7643682107211023162",
+              "text": "怎么还没有更新",
+              "images": [],
+              "stickers": [],
+              "digg_count": 0,
+              "create_time": 1779683426,
+              "ip_label": "新疆",
+              "reply_comment_total": 0,
+              "reply_id": "7643400932566516529",
+              "reply_to_reply_id": "7643412692254622501",
+              "nickname": "你的后面我在呢？",
+              "uid": "4454862498830391",
+              "unique_id": "dy17lgs1pv9l",
+              "short_id": "3543989215",
+              "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813c000-ce_ooonwKDAAInAFA9DSefE9ORDNiuFICARAEEeME.jpeg?from=2064092626",
+              "source": "api",
+              "reply_to_comment_id": "7643400932566516529",
+              "reply_to_nickname": "你的后面我在呢？",
+              "replies": [
+                {
+                  "cid": "7643724702075388709",
+                  "text": "马上",
+                  "images": [],
+                  "stickers": [],
+                  "digg_count": 0,
+                  "create_time": 1779693344,
+                  "ip_label": "江苏",
+                  "reply_comment_total": 0,
+                  "reply_id": "7643400932566516529",
+                  "reply_to_reply_id": "7643682107211023162",
+                  "nickname": "讲电影的老K",
+                  "uid": "7616341058514994235",
+                  "unique_id": "23150720611",
+                  "short_id": "23150720611",
+                  "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813c000-ce_oQw1A0nAB9QiaibPHxMAo8EMRIAAQkChhaAcP.jpeg?from=2064092626",
+                  "source": "api",
+                  "reply_to_comment_id": "7643400932566516529",
+                  "reply_to_nickname": "你的后面我在呢？"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

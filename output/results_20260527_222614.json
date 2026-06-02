@@ -1,0 +1,118 @@
+{
+  "video_url": "https://www.douyin.com/video/7638894402140201189",
+  "scraped_at": "2026-05-27T22:26:14.500373+08:00",
+  "queried_targets": [
+    "wjz12131415hhh"
+  ],
+  "total_comments_scraped": 9,
+  "total_replies_scraped": 6,
+  "data_source": "api",
+  "matched_comments": [
+    {
+      "cid": "7638923529291662117",
+      "text": "主播现在多少kg了[不是吧]",
+      "images": [],
+      "stickers": [],
+      "digg_count": 0,
+      "create_time": 1778575484,
+      "ip_label": "湖北",
+      "reply_comment_total": 11,
+      "reply_id": "0",
+      "reply_to_reply_id": "0",
+      "nickname": "Tuk-相遇",
+      "uid": "1003231006187336",
+      "unique_id": "c333333110",
+      "short_id": "34376918251",
+      "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813c000-ce_o4zRaPmqYSNAimCAFEhAaAhPnKAIMFRBiZhFZ.jpeg?from=2064092626",
+      "source": "api",
+      "replies": [
+        {
+          "cid": "7638923960616796965",
+          "text": "我现在都快70kg了 这个图里面是我一年前 2025 初二 当时62 3这样子吧",
+          "images": [],
+          "stickers": [],
+          "digg_count": 2,
+          "create_time": 1778575585,
+          "ip_label": "广东",
+          "reply_comment_total": 0,
+          "reply_id": "7638923529291662117",
+          "reply_to_reply_id": "0",
+          "nickname": "不hh",
+          "uid": "407276889060291",
+          "unique_id": "88061264882",
+          "short_id": "88061264882",
+          "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813c000-ce_ooiU8A9AEEAf3IAEAqAwnvJ1oCiewXBBFv8653.jpeg?from=2064092626",
+          "source": "api",
+          "reply_to_comment_id": "7638923529291662117",
+          "reply_to_nickname": "Tuk-相遇",
+          "replies": [
+            {
+              "cid": "7638924444681126693",
+              "text": "主播多高？我也是从160开始的",
+              "images": [],
+              "stickers": [],
+              "digg_count": 0,
+              "create_time": 1778575697,
+              "ip_label": "湖北",
+              "reply_comment_total": 0,
+              "reply_id": "7638923529291662117",
+              "reply_to_reply_id": "7638923960616796965",
+              "nickname": "Tuk-相遇",
+              "uid": "1003231006187336",
+              "unique_id": "c333333110",
+              "short_id": "34376918251",
+              "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813c000-ce_o4zRaPmqYSNAimCAFEhAaAhPnKAIMFRBiZhFZ.jpeg?from=2064092626",
+              "source": "api",
+              "reply_to_comment_id": "7638923529291662117",
+              "reply_to_nickname": "Tuk-相遇",
+              "replies": [
+                {
+                  "cid": "7638924668443624250",
+                  "text": "身高硬伤[黑脸] 才172 173这样子",
+                  "images": [],
+                  "stickers": [],
+                  "digg_count": 0,
+                  "create_time": 1778575750,
+                  "ip_label": "广东",
+                  "reply_comment_total": 0,
+                  "reply_id": "7638923529291662117",
+                  "reply_to_reply_id": "7638924444681126693",
+                  "nickname": "不hh",
+                  "uid": "407276889060291",
+                  "unique_id": "88061264882",
+                  "short_id": "88061264882",
+                  "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813c000-ce_ooiU8A9AEEAf3IAEAqAwnvJ1oCiewXBBFv8653.jpeg?from=2064092626",
+                  "source": "api",
+                  "reply_to_comment_id": "7638923529291662117",
+                  "reply_to_nickname": "Tuk-相遇",
+                  "replies": [
+                    {
+                      "cid": "7639017474335212334",
+                      "text": "173差不多了  穿鞋有175了够用了",
+                      "images": [],
+                      "stickers": [],
+                      "digg_count": 0,
+                      "create_time": 1778597356,
+                      "ip_label": "广东",
+                      "reply_comment_total": 0,
+                      "reply_id": "7638923529291662117",
+                      "reply_to_reply_id": "7638924668443624250",
+                      "nickname": "有钱就吃擀面皮",
+                      "uid": "2500753576180540",
+                      "unique_id": "wjz12131415hhh",
+                      "short_id": "36020182750",
+                      "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813_oIASAfbWBAA1iAQAKBi7PrEZACDIq9agxWePbA.jpeg?from=2064092626",
+                      "source": "api",
+                      "reply_to_comment_id": "7638923529291662117",
+                      "reply_to_nickname": "Tuk-相遇"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

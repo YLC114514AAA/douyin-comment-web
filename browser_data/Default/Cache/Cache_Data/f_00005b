@@ -1,0 +1,835 @@
+/*! For license information please see 98071.314aa0bc.js.LICENSE.txt */
+!function(r,e){"object"==typeof module&&"object"==typeof module.exports?e():"function"==typeof define&&define.amd?define([],e):(r="undefined"!=typeof globalThis?globalThis:r||self)&&e()}(this,function(){"use strict";"object"==typeof window&&(window.openRedirect={version:"1.2.18",webpackPluginVersion:"3.4.20",reportOnly:!1})}),!function(r,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"function"==typeof define&&define.amd?define(["exports"],e):e((r="undefined"!=typeof globalThis?globalThis:r||self).xss={})}(this,function(r){"use strict";var e=function(){return(e=Object.assign||function(r){for(var e,t=1,i=arguments.length;t<i;t++)for(var n in e=arguments[t])Object.prototype.hasOwnProperty.call(e,n)&&(r[n]=e[n]);return r}).apply(this,arguments)};function t(r,e,t){if(t||2==arguments.length)for(var i,n=0,a=e.length;n<a;n++)!i&&n in e||(i||(i=Array.prototype.slice.call(e,0,n)),i[n]=e[n]);return r.concat(i||Array.prototype.slice.call(e))}var i=/[^a-zA-Z0-9\\_:.-]/gim,n=/</g,a=/>/g,o=/&#([a-zA-Z0-9]*);?/gim,s=/&quot;/g,c=/&colon;?/gim,l=/&newline;?/gim,u=/((j\s*a\s*v\s*a|v\s*b|l\s*i\s*v\s*e)\s*s\s*c\s*r\s*i\s*p\s*t\s*|m\s*o\s*c\s*h\s*a):/gi,p=/u\s*r\s*l\s*\(.*/gi,h=/e\s*x\s*p\s*r\s*e\s*s\s*s\s*i\s*o\s*n\s*\(.*/gi,d=/"/g,f=function(r){return r.replace(n,"&lt;").replace(a,"&gt;")},G={indexOf:function(r,e){var t,i;for(t=0,i=r.length;t<i;t++)if(r[t]===e)return t;return -1},forEach:function(r,e,t){var i,n;for(i=0,n=r.length;i<n;i++)e.call(t,r[i],i,r)},some:function(r,e,t){var i,n;for(i=0,n=r.length;i<n;i++)if(e.call(t,r[i],i,r))return!0;return!1},trim:function(r){return r.replace(/(^\s*)|(\s*$)/g,"")},includes:function(r,e){if("string"==typeof r)return -1!==r.indexOf(e);for(var t=0;t<r.length;t++)if(r[t]===e)return!0;return!1},spaceIndex:function(r){var e=/\s|\n|\t/.exec(r);return e?e.index:-1},uniq:function(r){for(var e={},t=[],i=0;i<r.length;i++)e[r[i]]||(t.push(r[i]),e[r[i]]=!0);return t},from:function(r){for(var e=[],t=0;t<r.length;t++)e.push(r[t]);return e},keys:function(r){var e=[];for(var t in r)e.push(t);return e}};function g(r){return null==r}function m(r){var e;return'"'===(e=r)[0]&&'"'===e[e.length-1]||"'"===e[0]&&"'"===e[e.length-1]?r.substr(1,r.length-2):r}function D(r){var e,t,i,n,a,o,s,c="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",l="",u=0;for(r=function(r){r=r.replace(/rn/g,"n");for(var e="",t=0;t<r.length;t++){var i=r.charCodeAt(t);i<128?e+=String.fromCharCode(i):i>127&&i<2048?e+=String.fromCharCode(i>>6|192)+String.fromCharCode(63&i|128):e+=String.fromCharCode(i>>12|224)+String.fromCharCode(i>>6&63|128)+String.fromCharCode(63&i|128)}return e}(r);u<r.length;)n=(e=r.charCodeAt(u++))>>2,a=(3&e)<<4|(t=r.charCodeAt(u++))>>4,o=(15&t)<<2|(i=r.charCodeAt(u++))>>6,s=63&i,isNaN(t)?o=s=64:isNaN(i)&&(s=64),l=l+c.charAt(n)+c.charAt(a)+c.charAt(o)+c.charAt(s);return l}function v(r){var e,t,i,n,a,o,s="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",c="",l=0;for(r=r.replace(/[^A-Za-z0-9+/=]/g,"");l<r.length;)e=s.indexOf(r.charAt(l++))<<2|(n=s.indexOf(r.charAt(l++)))>>4,t=(15&n)<<4|(a=s.indexOf(r.charAt(l++)))>>2,i=(3&a)<<6|(o=s.indexOf(r.charAt(l++))),c+=String.fromCharCode(e),64!==a&&(c+=String.fromCharCode(t)),64!==o&&(c+=String.fromCharCode(i));return function(r){for(var e="",t=0,i=0,n=0,a=0;t<r.length;)(i=r.charCodeAt(t))<128?(e+=String.fromCharCode(i),t++):i>191&&i<224?(e+=String.fromCharCode((31&i)<<6|63&(a=r.charCodeAt(t+1))),t+=2):(a=r.charCodeAt(t+1),e+=String.fromCharCode((15&i)<<12|(63&a)<<6|63&(n=r.charCodeAt(t+2))),t+=3);return e}(c)}function H(r,e,t){var i="",n=0,a=!1,o=!1,s=0,c=r.length,l="",u="";r:for(s=0;s<c;s++){var p=r.charAt(s);if(!1===a){if("<"===p){a=s;continue}}else if(!1===o){if("<"===p){i+=t(r.slice(n,s)),a=s,n=s;continue}if(">"===p||s===c-1){i+=t(r.slice(n,a)),l=function(r){var e,t=G.spaceIndex(r);return e=-1===t?r.slice(1,-1):r.slice(1,t+1),"/"===(e=G.trim(e).toLowerCase()).slice(0,1)&&(e=e.slice(1)),"/"===e.slice(-1)&&(e=e.slice(0,-1)),e}(u=r.slice(a,s+1)),i+=e(a,i.length,l,u,"</"===u.slice(0,2)),n=s+1,a=!1;continue}if('"'===p||"'"===p)for(var h=1,d=r.charAt(s-h);""===d.trim()||"="===d;){if("="===d){o=p;continue r}d=r.charAt(s-++h)}}else if(p===o){o=!1;continue}}return n<c&&(i+=t(r.substr(n))),i}function y(r,e){var t=0,n=0,a=[],o=!1,s=r.length;function c(r,t){if(!((r=(r=G.trim(r)).replace(i,"").toLowerCase()).length<1)){var n=e(r,t||"");n&&a.push(n)}}for(var l=0;l<s;l++){var u=r.charAt(l),p=void 0;if(!1!==o||"="!==u){if(!1===o||l!==n){if(/\s|\n|\t/.test(u)){if(r=r.replace(/\s|\n|\t/g," "),!1===o){if(-1===(p=function(r,e){for(;e<r.length;e++){var t=r[e];if(" "!==t)return"="===t?e:-1}return -1}(r,l))){c(G.trim(r.slice(t,l))),o=!1,t=l+1;continue}l=p-1;continue}if(-1===(p=function(r,e){for(;e>0;e--){var t=r[e];if(" "!==t)return"="===t?e:-1}return -1}(r,l-1))){c(o,m(G.trim(r.slice(t,l)))),o=!1,t=l+1;continue}}}else{if(-1===(p=r.indexOf(u,l+1)))break;c(o,G.trim(r.slice(n+1,p))),o=!1,t=(l=p)+1}}else o=r.slice(t,l),t=l+1,n='"'===r.charAt(t)||"'"===r.charAt(t)?t:function(r,e){for(;e<r.length;e++){var t=r[e];if(" "!==t)return"'"===t||'"'===t?e:-1}return -1}(r,l+1)}return t<r.length&&(!1===o?c(r.slice(t)):c(o,m(G.trim(r.slice(t))))),G.trim(a.join(" "))}function b(r,e,t){if(t=function(r){return r=function(r){for(var e="",t=0,i=r.length;t<i;t++)e+=32>r.charCodeAt(t)?" ":r.charAt(t);return G.trim(e)}(r=(r=(r=r.replace(s,'"')).replace(o,function(r,e){return"x"===e[0]||"X"===e[0]?String.fromCharCode(parseInt(e.substr(1),16)):String.fromCharCode(parseInt(e,10))})).replace(c,":").replace(l," "))}(t),"href"===e||"src"===e){if("#"===(t=G.trim(t)))return"#";if("http://"!==t.substr(0,7)&&"https://"!==t.substr(0,8)&&"mailto:"!==t.substr(0,7)&&"tel:"!==t.substr(0,4)&&"data:image/"!==t.substr(0,11)&&"ftp://"!==t.substr(0,6)&&"./"!==t.substr(0,2)&&"../"!==t.substr(0,3)&&"#"!==t[0]&&"/"!==t[0])return""}else if("background"===e){if(u.lastIndex=0,u.test(t))return""}else if("style"===e&&(h.lastIndex=0,h.test(t)||(p.lastIndex=0,p.test(t)&&(u.lastIndex=0,u.test(t)))))return"";return t=function(r){return r=f(r=r.replace(d,"&quot;"))}(t)}var I=function(r){return"string"==typeof r?r.replace(/'/g,'"').replace('=""',"").replace(/\s+/g,"").toLowerCase():""},C=function(){function r(r){var e=function(r){var e={};for(var t in r)e[t]=r[t];return e}(r||{});e.stripIgnoreTag&&(e.onIgnoreTag,e.onIgnoreTag=function(){return""}),e.whiteList={},e.onTag=function(){},e.onTagAttr=function(){},e.onIgnoreTag=function(){},e.onIgnoreTagAttr=function(){},e.safeAttrValue=b,e.escapeHtml=f,this.options=Object.assign(e,r)}return r.prototype.process=function(r){if(!(r=(r=r||"").toString()))return"";var e,t,i,n,a,o,s=this.options,c=s.whiteList,l=s.onTag,u=s.onIgnoreTag,p=s.onTagAttr,h=s.onIgnoreTagAttr,d=s.safeAttrValue,f=s.escapeHtml;s.stripBlankChar&&(r=(e=(e=r.split("")).filter(function(r){var e=r.charCodeAt(0);return!(127===e||e<=31&&10!==e&&13!==e)})).join("")),s.allowCommentTag||(r=function(r){for(var e="",t=0;t<r.length;){var i=r.indexOf("\x3c!--",t);if(-1===i){e+=r.slice(t);break}e+=r.slice(t,i);var n=r.indexOf("--\x3e",i);if(-1===n)break;t=n+3}return e}(r));var g=!1;s.stripIgnoreTagBody&&(t=s.stripIgnoreTagBody,"function"!=typeof(i=u)&&(i=function(){}),n=!Array.isArray(t),a=[],o=!1,u=(g={onIgnoreTag:function(r,e,s){var c;if(c=r,n||-1!==G.indexOf(t,c)){if(s.isClosing){var l="[/removed]",u=s.position+l.length;return a.push([!1!==o?o:s.position,u]),o=!1,l}return o||(o=s.position),"[removed]"}return i(r,e,s)},remove:function(r){var e="",t=0;return G.forEach(a,function(i){e+=r.slice(t,i[0]),t=i[1]}),e+=r.slice(t)}}).onIgnoreTag);var m=H(r,function(r,e,t,i,n){var a={sourcePosition:r,position:e,isClosing:n,isWhite:Object.prototype.hasOwnProperty.call(c,t)},o=l(t,i,a);if(null!=o)return o;if(a.isWhite){if(a.isClosing)return"</".concat(t,">");var s=function(r){var e=G.spaceIndex(r);if(-1===e)return{html:"",closing:"/"===r[r.length-2]};var t="/"===(r=G.trim(r.slice(e+1,-1)))[r.length-1];return t&&(r=G.trim(r.slice(0,-1))),{html:r,closing:t}}(i),g=c[t],m=y(s.html,function(r,e){var i=-1!==G.indexOf(g,r),n=p(t,r,e,i);return null==n?i?(e=d(t,r,e,null))?"".concat(r,'="').concat(e,'"'):r:null==(n=h(t,r,e,i))?void 0:n:n});return i="<".concat(t),m&&(i+=" ".concat(m)),s.closing&&(i+=" /"),i+=">"}return null==(o=u(t,i,a))?f(i):o},f);return g&&(m=g.remove(m)),m},r}(),w=Function("\nvar _checkXSS = function (it) {\n  return it && it.Math == Math && it;\n};\nreturn _checkXSS(typeof globalThis === 'object' && globalThis) ||\n_checkXSS(typeof window === 'object' && window) ||\n_checkXSS(typeof self === 'object' && self) ||\n_checkXSS(typeof global === 'object' && global) ||\nFunction('return this')();\n")(),P=new(function(){function r(){var r=this;this.batchData=[],this.uniqKeys=new Set,this.timeout=2e3,this.lock=!1,this.getSlardarBid=function(){var e,t,i="douyin_web";if(!G.includes(i,"bid"))return i;if(r.config&&r.config.bid)return r.config.bid;if(w&&w._xssBid)return w._xssBid;if(w&&w.slardar&&"function"==typeof w.slardar.config){var n=(w.slardar.config()||{}).bid;if(n)return n}if(w&&w.Slardar&&"function"==typeof w.Slardar.config){var a=(w.Slardar.config()||{}).bid;if(a)return a}return(null===(t=null===(e=null==w?void 0:w.Slardar)||void 0===e?void 0:e._baseParams)||void 0===t?void 0:t.bid)||"argus"},this.getConfigRegion=function(){var e;return G.includes("cn","region")?r.config&&r.config.region?r.config.region:((null===(e=null==w?void 0:w.gfdatav1)||void 0===e?void 0:e.region)||"cn").toLowerCase():"cn"},this.gerReportUrl=function(){var e={cn:v("aHR0cHM6Ly9tb24uemlqaWVhcGkuY29tL21vbml0b3JfYnJvd3Nlci9jb2xsZWN0L2JhdGNoL3NlY3VyaXR5Lz9iaWQ9"),boe:v("aHR0cHM6Ly9tb24uemlqaWVhcGkuY29tL21vbml0b3JfYnJvd3Nlci9jb2xsZWN0L2JhdGNoL3NlY3VyaXR5Lz9iaWQ9"),ttp:v("aHR0cHM6Ly9tb24udXMudGlrdG9rdi5jb20vbW9uaXRvcl9icm93c2VyL2NvbGxlY3QvYmF0Y2gvc2VjdXJpdHkvP2JpZD0="),va:v("aHR0cHM6Ly9tb24tdmEuYnl0ZW92ZXJzZWEuY29tL21vbml0b3JfYnJvd3Nlci9jb2xsZWN0L2JhdGNoL3NlY3VyaXR5Lz9iaWQ9"),maliva:v("aHR0cHM6Ly9tb24tdmEuYnl0ZW92ZXJzZWEuY29tL21vbml0b3JfYnJvd3Nlci9jb2xsZWN0L2JhdGNoL3NlY3VyaXR5Lz9iaWQ9"),sg:v("aHR0cHM6Ly9tb24tdmEuYnl0ZW92ZXJzZWEuY29tL21vbml0b3JfYnJvd3Nlci9jb2xsZWN0L2JhdGNoL3NlY3VyaXR5Lz9iaWQ9"),boei18n:v("aHR0cHM6Ly9tb24tdmEuYnl0ZW92ZXJzZWEuY29tL21vbml0b3JfYnJvd3Nlci9jb2xsZWN0L2JhdGNoL3NlY3VyaXR5Lz9iaWQ9")}[r.getConfigRegion()];if(e)return e+r.getSlardarBid()}}return r.prototype.setConfig=function(r){this.config=r},r.prototype.upload=function(){var r=this,e=this.gerReportUrl();!this.lock&&e&&0!==this.batchData.length&&(this.lock=!0,setTimeout(function(){var t=r.batchData.slice(0,100);r.batchData=r.batchData.slice(100),w.fetch(e,{method:"post",body:JSON.stringify(t),headers:{"Content-Type":"application/json"}}).catch(function(r){}),r.lock=!1,r.upload()},this.timeout))},r.prototype.generateKey=function(r){return r.collectKey?[r.collectMode,r.collectKey].join("___"):""},r.prototype.push=function(r){this.batchData.push(r),this.upload()},r.prototype.report=function(r){var e=this.generateKey(r);if(w.fetch&&r.collectKey){var t="object"==typeof window?window.location.href:"SSR";r.documentUrl=t;var i={age:Math.floor(Date.now()),type:"xss",url:t,body:r,"user-agent":""};"enforce"===r.disposition&&"SSR"!==t||(i.url=e),"SSR"===t&&(i.url="SSR___".concat(i.url),i.body.ssr=!0),this.push(i)}},r}()),E=function(r){for(var e=0,t=function(t){Array.isArray(r[t])?0===r[t].length?delete r[t]:(r[t]=G.from(G.uniq(r[t])),e+=r[t].length):0===G.keys(r[t]).length?delete r[t]:G.keys(r[t]).forEach(function(i){r[t][i]=G.from(G.uniq(r[t][i])),e+=r[t][i].length})},i=0,n=G.keys(r);i<n.length;i++)t(n[i]);return{count:e,ret:r}};function T(r,e){return P.setConfig(e),new C(e).process(r)}function k(r){var e,t=(e=/\s|\n|\t/.exec(r))?e.index:-1;if(-1===t)return{html:"",closing:"/"===r[r.length-2]};var i="/"===(r=r.slice(t+1,-1).trim())[r.length-1];return i&&(r=r.slice(0,-1).trim()),{html:r,closing:i}}var S=function(r){return -1===(r=(r=(r=(r=r.replace(/&colon;/gi,":")).replace(/&tab;/gi,"")).replace(/&newline;/gi,"")).replace(/(\t|\n|\r)/g,"")).indexOf("&#")?r.trim().toLowerCase():r.trim().replace(/&#(?:(x)([0-9a-f]+)|([0-9]+));?/gi,function(r,e,t,i){return String.fromCharCode(e?parseInt(t,16):parseInt(i))}).replace(/(\t|\n|\r)/g,"").toLowerCase()};function x(r,e){if(void 0===r&&(r=""),"string"!=typeof r)return!0;if(r=S(r),G.includes(r,"base64")&&!function(r){if(""===r||""===r.trim())return!0;try{return!G.includes(r,"data:text/html;base64")}catch(r){return!0}}(r))return e&&e("data:text/html;base64"),!1;var t=["expression(","behavior:","view-source:"];if(G.some(t,function(e){return -1!==r.indexOf(e)}))return G.forEach(t,function(t){-1!==r.indexOf(t)&&e&&e(t)}),!1;var i=["data:application","data:javascript","data:text/html","data:texthtml"];if(G.some(i,function(e){return -1!==r.indexOf(e)}))return G.forEach(i,function(t){-1!==r.indexOf(t)&&e&&e(t)}),!1;if(r.indexOf("javascript:")>0)return e&&e("javascript:"),!1;if(/^javascript:/i.test(r)){var n=r.slice(11).replace(/\s/g,"").trim();return!!G.some(["void","void(0)","void0","false","undefined",";"],function(r){return r===n})||(e&&e("javascript:"),!1)}return!0}var _=function(r,e){var t,i,n="<%= isSaveValidUrl =>";if("string"!=typeof r||(i=Number("<%= urlLimit =>"),void 0!==t&&(i=t),"NaN"!==r.toString()&&-1!==i&&r.length>=i)||x(r,e))return r;try{if(!0===(n=JSON.parse(n))||"true"===n){var a=new URL(r);return a.origin+a.pathname}}catch(r){}return"#"};function M(r,e,i){if(void 0===r&&(r=""),void 0===e&&(e=[]),"string"!=typeof r)return!0;if(!x(r=S(r)))return!1;var n,a={url:(n=r.match(/^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/)||[])[0],scheme:n[1],slash:n[2],host:n[3],port:n[4],path:n[5],query:n[6],hash:n[7]},o=a.scheme,s=a.host;return i?!!i(r):!(!o||!s)&&(!G.includes(["http","https","file"],o)||("object"==typeof window&&window&&(e=t(t([],e,!0),[location.host],!1)),G.some(e,function(r){return!!(r instanceof RegExp&&r.test(s))||r===s})))}var R={a:["target","title","spellcheck","rel"],canvas:[],abbr:["title"],address:[],area:["shape","coords","alt"],article:[],aside:[],audio:["autoplay","controls","loop","preload"],b:[],bdi:["dir"],bdo:["dir"],big:[],blockquote:["cite"],br:[],caption:[],center:[],cite:[],code:[],col:["align","valign","span","width"],colgroup:["align","valign","span","width"],dd:[],del:["datetime"],details:["open"],div:["dir"],dl:[],dt:[],em:[],font:["color","size","face"],footer:[],h1:[],h2:[],h3:[],h4:[],h5:[],h6:[],header:[],hr:[],i:[],img:["alt","title","width","height","decoding"],ins:["datetime"],li:[],mark:[],nav:[],ol:["start"],p:[],pre:[],s:[],section:[],small:[],span:[],sub:[],sup:[],delete:[],form:[],strong:[],mask:["maskunits","x","y","width","height","fill"],table:["width","border","align","valign"],tbody:["align","valign"],td:["width","rowspan","colspan","align","valign"],tfoot:["align","valign"],th:["width","rowspan","colspan","align","valign"],thead:["align","valign"],tr:["rowspan","align","valign"],tt:[],u:[],ul:[],wbr:[],video:["autoplay","controls","loop","preload","height","width"],svg:["viewBox","version","xmlns","fill","width","height","stroke","stroke-width","style"],path:["d","fill","opacity","stroke","p-id","fill-rule","clip-rule","stroke-width","stroke-linecap","stroke-linejoin","fill-opacity","mask"],rect:["x","y","width","height","fill","stroke","rx"],g:[]},A={collect:null,initCollect:function(){this.collect={whiteList:{},filterProtocol:[]}},removeCollect:function(){var r=E(this.collect),e=r.count,t=r.ret;return this.collect=null,{collectKey:0===e?null:JSON.stringify(t),collectMode:"white"}},onIgnoreTagAttr:function(r,e,i){return r&&G.indexOf(["href","src"],e)>-1?A.domainWhiteList&&Array.isArray(A.domainWhiteList)&&A.domainWhiteList.length>0&&!M(i,t([],A.domainWhiteList,!0))?"":"".concat(e,'="').concat(_(i,function(r){var e;null===(e=A.collect)||void 0===e||e.filterProtocol.push(r)}),'"'):r&&(G.indexOf(["style","class","id"],e)>-1||e.indexOf("data-")>-1)?"".concat(e,'="').concat(i,'"'):(A.collect.whiteList[r]=A.collect.whiteList[r]||[],void A.collect.whiteList[r].push(e))},onIgnoreTag:function(r,e){if("style"===r)return e;H(e,function(r,e,t,i){y(k(i).html.replace("/",""),function(r){A.collect.whiteList[t]=A.collect.whiteList[t]||[],A.collect.whiteList[t].push(r)})},f)},whiteList:R,mergeWhiteList:function(r){for(var e,t={},i=0,n=G.keys(R);i<n.length;i++)t[e=n[i]]=G.from(R[e]);for(var a=0,o=G.keys(r);a<o.length;a++)t[e=o[a]]=e in R?R[e].concat(r[e]):G.from(r[e]);return t},setWhiteList:function(r){for(var e=0,t=G.keys(r);e<t.length;e++){var i=t[e];this.whiteList[i]=i in R?R[i].concat(r[i]):G.from(r[i])}}};try{var O={},U="merge";G.includes(U,"override")&&(A.whiteList=O.whiteList),G.includes(U,"merge")&&A.setWhiteList(O.whiteList)}catch(r){}var L=function(r,e){for(var t={},i=0,n=G.keys(r);i<n.length;i++){var a=n[i];Array.isArray(r[a])?t[a]=G.from(r[a]):t[a]=L({},r[a])}for(var o=0,s=G.keys(e);o<s.length;o++)(a=s[o])in r?Array.isArray(r[a])?t[a]=r[a].concat(e[a]):t[a]=L(r[a],e[a]):Array.isArray(e[a])?t[a]=G.from(e[a]):t[a]=L({},e[a]);return t},j={blackList:{a:["folder"],meta:["content"],iframe:["srcdoc"],input:["pattern"],vmlframe:["xmlns"]},blackTags:["script","xml","embed","isindex","object","base","set","handler","animate","payload","import"],blackAttrs:["charset","ns","namespace","formaction","xlink:href","xmlns:xlink","handler","repeat","repeat-start","repeat-end"],blackAttrRegExps:[/^on/],filterList:{param:["value"],video:["poster"],form:["action"]},filterAttrs:["href","src","background","style","dynsrc","lowsrc","content"]};try{var N={};N.blackAttrRegExps&&(N.blackAttrRegExps=N.blackAttrRegExps.map(function(r){return new RegExp(r.toString().slice(1,r.toString().length-1))}));var W="merge";G.includes(W,"override")&&(j=N),G.includes(W,"merge")&&(j=L(j,N))}catch(r){}var V={mode:"black",whiteList:{},blackConfig:j,collect:null,initCollect:function(){V.collect={blackList:{},blackTags:[],blackAttrs:[],blackAttrRegExps:[],filterAttrs:[],filterList:{},filterProtocol:[]}},removeCollect:function(){var r=E(V.collect),e=r.count,t=r.ret;return V.collect=null,{collectKey:0===e?null:JSON.stringify(t),collectMode:"black"}},onIgnoreTag:function(r,e){var t;if(!G.includes(j.blackTags,r))return H(e,function(r,e,t,i,n){if(-1!==t.indexOf("/"))return f(i);if(n)return"</".concat(t,">");var a=k(i),o=y(a.html,function(r,e){var i,n=0;if(j.blackList[t]&&G.includes(j.blackList[t],r)&&(V.collect.blackList[t]=V.collect.blackList[t]||[],V.collect.blackList[t].push(r),n++),j.blackAttrRegExps.length&&j.blackAttrRegExps.some(function(e){return e.test(r)})&&G.forEach(j.blackAttrRegExps,function(e){e.test(r)&&(V.collect.blackAttrRegExps.push("".concat(e.toString(),"->").concat(r)),n++)}),j.blackAttrs.length&&G.includes(j.blackAttrs,r)&&(j.blackAttrs.push(r),n++),!n){if(j.filterList&&j.filterList[t]&&G.includes(j.filterList[t],r)){var a=_(e,function(r){var e;null===(e=V.collect)||void 0===e||e.filterProtocol.push(r)});return a!==e&&(V.collect.filterList[t]=V.collect.filterList[t]||[],V.collect.filterList[t].push(r)),e?"".concat(r,"='").concat(a,"'"):r}return j.filterAttrs&&G.includes(j.filterAttrs,r)?((a=_(e,function(r){var e;null===(e=V.collect)||void 0===e||e.filterProtocol.push(r)}))!==e&&(null===(i=V.collect)||void 0===i||i.filterAttrs.push(r)),e?"".concat(r,"='").concat(a,"'"):r):e?"".concat(r,"='").concat(e,"'"):r}});return i="<".concat(t),o&&(i+=" ".concat(o)),a.closing&&(i+=" /"),i+=">"},f);null===(t=V.collect)||void 0===t||t.blackTags.push(r)}},F=function(r){var e=r.reportOnly,t=void 0===e||e,i=r.block;return t&&"all"===t?"report":("string"==typeof t&&("true"===t&&(t=!0),"false"===t&&(t=!1)),i?"enforce":t?"report":"enforce")},X=function(r){return function(t,i,n){if(!t||"string"!=typeof t)return t;var a=i;r===T&&(a=A).initCollect();var o=r(t,a);if(I(o)===I(t))return t;if(!n)return o;var s=n.logType,c=F(n),l=a.removeCollect();return P.report(e(e({type:s,disposition:c},l),{sourceText:D(t),filterText:D(o)})),"enforce"===c?o:t}},B=X(function(r,e){return void 0===e&&(e={}),e&&e.whiteList||(e.whiteList={a:["target","href","title"],abbr:["title"],address:[],area:["shape","coords","href","alt"],article:[],aside:[],audio:["autoplay","controls","crossorigin","loop","muted","preload","src"],b:[],bdi:["dir"],bdo:["dir"],big:[],blockquote:["cite"],br:[],caption:[],center:[],cite:[],code:[],col:["align","valign","span","width"],colgroup:["align","valign","span","width"],dd:[],del:["datetime"],details:["open"],div:[],dl:[],dt:[],em:[],figcaption:[],figure:[],font:["color","size","face"],footer:[],h1:[],h2:[],h3:[],h4:[],h5:[],h6:[],header:[],hr:[],i:[],img:["src","alt","title","width","height"],ins:["datetime"],li:[],mark:[],nav:[],ol:[],p:[],pre:[],s:[],section:[],small:[],span:[],sub:[],summary:[],sup:[],strong:[],strike:[],table:["width","border","align","valign"],tbody:["align","valign"],td:["width","rowspan","colspan","align","valign"],tfoot:["align","valign"],th:["width","rowspan","colspan","align","valign"],thead:["align","valign"],tr:["rowspan","align","valign"],tt:[],u:[],ul:[],video:["autoplay","controls","crossorigin","loop","muted","playsinline","poster","preload","src","height","width"]}),new C(e).process(r)}),Z=X(T),z=function(r,e,t){var i=[],n=_(r,function(r){i.push(r)});if(n===r)return r;i=G.from(G.uniq(i));var a=e||t||{};if(!a)return n;var o=a.logType,s=F(t);return P.report({type:o,disposition:s,collectKey:i.join("___"),collectData:JSON.stringify(i),collectMode:"black",sourceText:D(r),filterText:D(n)}),"enforce"===s?n:r},$=w._xssProject||{},Y=w.xssNamespace||{},K="3.0.26",J={FilterXSS:C,version:K,webpackPluginVersion:"<%= webpackPluginVersion =>",reportOnly:"<%= reportOnly =>",filterXSS:B,_filterXSS:Z,filterUrl:z,Config:A,BlackConfig:V,project:$,setProjectName:function(r){$[r]=this,w._xssProjectName=r}};Y.douyin_web=J,w.xssNamespace=Y,w.Math&&!w.Math.xssNamespace&&(w.Math.xssNamespace=Y),$[K]=J,w.globalThis=w,w.getFilterXss=function(){return void 0!==this._xssProjectName?this._xssProject[this._xssProjectName]:J},w.xss=J,w.isSafeUrl=M,w.isSafeDomain=M,w.isSafeProtocol=x,w._xssProject=$,w._xssProjectName&&($[w._xssProjectName]=J);var q=J.setProjectName.bind(J);r.BlackConfig=V,r.Config=A,r.FilterXSS=C,r._filterXSS=Z,r.filterUrl=z,r.filterXSS=B,r.isSafeDomain=M,r.isSafeProtocol=x,r.isSafeUrl=M,r.project=$,r.setProjectName=q,r.setXssNamespace=function(r){var e=r.appId,t=r.bid,i=r.region;Y[e]=J;A.bid=t,A.region=i,A.enabled=!0},r.xssNamespace=Y,Object.defineProperty(r,"__esModule",{value:!0})}),(self.webpackChunkdouyin_web=self.webpackChunkdouyin_web||[]).push([["98071"],{766410:function(r,e,t){"use strict";t.r(e)},20072:function(r,e,t){"use strict";t.r(e)},619835:function(r,e,t){"use strict";t(429532),t(250440);var i=t(96008),n=t.n(i),a=t(590098),o=t.n(a),s=t(300277),c=t.n(s),l=t(88648),u=t(201845),p=t.n(u),h=t(713097),d=t.n(h),f=t(869239),G=t(4540),g=t(116617),m=t(705514);t(487389);var D=t(605471),v=t(74066);class H extends m.Z{get adapter(){return Object.assign(Object.assign({},super.adapter),{setNativeControlChecked:r=>{this.setState({checked:r})},notifyChange:r=>{let{onChange:e}=this.props;e&&e(r)},generateEvent:(r,e)=>{let{props:t}=this;return{target:Object.assign(Object.assign({},t),{checked:r}),stopPropagation:()=>{e.stopPropagation()},preventDefault:()=>{e.preventDefault()},nativeEvent:{stopImmediatePropagation:()=>{e.nativeEvent&&"function"==typeof e.nativeEvent.stopImmediatePropagation&&e.nativeEvent.stopImmediatePropagation()}}}},getIsInGroup:()=>this.isInGroup(),getGroupValue:()=>this.context&&this.context.checkboxGroup.value||[],notifyGroupChange:r=>{this.context.checkboxGroup.onChange(r)},getGroupDisabled:()=>this.context&&this.context.checkboxGroup.disabled,setAddonId:()=>{this.setState({addonId:(0,v.Ms)({prefix:"addon"})})},setExtraId:()=>{this.setState({extraId:(0,v.Ms)({prefix:"extra"})})},setFocusVisible:r=>{this.setState({focusVisible:r})},focusCheckboxEntity:()=>{this.focus()}})}componentDidUpdate(r){this.props.checked!==r.checked&&(c()(this.props.checked)?this.foundation.setChecked(!1):o()(this.props.checked)&&this.foundation.setChecked(this.props.checked))}isInGroup(){return!!(this.context&&this.context.checkboxGroup&&"value"in this.props)}focus(){this.checkboxEntity&&this.checkboxEntity.focus()}blur(){this.checkboxEntity&&this.checkboxEntity.blur()}render(){let{disabled:r,style:e,prefixCls:t,className:i,indeterminate:n,children:a,onMouseEnter:o,onMouseLeave:s,extra:c,value:u,role:p,tabIndex:h,id:G,type:m}=this.props,{checked:D,addonId:v,extraId:H,focusVisible:y}=this.state,b={checked:D,disabled:r},I=this.isInGroup();if(I){if(this.context.checkboxGroup.value){let r=(this.context.checkboxGroup.value||[]).includes(u);b.checked=r}this.context.checkboxGroup.disabled&&(b.disabled=this.context.checkboxGroup.disabled||this.props.disabled);let{isCardType:r,isPureCardType:e}=this.context.checkboxGroup;b.isCardType=r,b.isPureCardType=e,b.name=this.context.checkboxGroup.name}else b.isPureCardType=m===f.j2.TYPE_PURECARD,b.isCardType=m===f.j2.TYPE_CARD||b.isPureCardType;let C=t||f.gX.PREFIX,w=b.isCardType||b.isPureCardType,P=d()(C,{[`${C}-disabled`]:b.disabled,[`${C}-indeterminate`]:n,[`${C}-checked`]:b.checked,[`${C}-unChecked`]:!b.checked,[`${C}-cardType`]:b.isCardType,[`${C}-cardType_disabled`]:b.disabled&&b.isCardType,[`${C}-cardType_enable`]:!(b.disabled&&b.isCardType),[`${C}-cardType_checked`]:b.isCardType&&b.checked&&!b.disabled,[`${C}-cardType_checked_disabled`]:b.isCardType&&b.checked&&b.disabled,[i]:!!i,[`${C}-focus`]:y&&w}),E=d()(`${C}-extra`,{[`${C}-cardType_extra_noChildren`]:b.isCardType&&!a});I&&this.context.checkboxGroup.name;let T=this.props["x-semi-children-alias"]||"children";return l.createElement("span",Object.assign({role:p,tabIndex:h,style:e,className:P,id:G,onMouseEnter:o,onMouseLeave:s,onClick:this.handleChange,onKeyPress:this.handleEnterPress,"aria-labelledby":this.props["aria-labelledby"]},this.getDataAttr(this.props)),l.createElement(g.Z,Object.assign({},this.props,b,{addonId:a&&v,extraId:c&&H,isPureCardType:b.isPureCardType,ref:r=>{this.checkboxEntity=r},focusInner:y&&!w,onInputFocus:this.handleFocusVisible,onInputBlur:this.handleBlur})),a||c?l.createElement("div",{className:`${C}-content`},a?l.createElement("span",{id:v,className:`${C}-addon`,"x-semi-prop":T},a):null,c?l.createElement("div",{id:H,className:E,"x-semi-prop":"extra"},c):null):null)}constructor(r){super(r),this.handleChange=r=>this.foundation.handleChange(r),this.handleEnterPress=r=>this.foundation.handleEnterPress(r),this.handleFocusVisible=r=>{this.foundation.handleFocusVisible(r)},this.handleBlur=r=>{this.foundation.handleBlur()};this.state={checked:r.checked||r.defaultChecked||!1,addonId:r.addonId,extraId:r.extraId,focusVisible:!1},this.checkboxEntity=null,this.foundation=new G.Z(this.adapter)}}H.contextType=D._,H.propTypes={"aria-describedby":p().string,"aria-errormessage":p().string,"aria-invalid":p().bool,"aria-labelledby":p().string,"aria-required":p().bool,checked:p().bool,defaultChecked:p().bool,disabled:p().bool,indeterminate:p().bool,onChange:p().func,value:p().any,style:p().object,className:p().string,prefixCls:p().string,onMouseEnter:p().func,onMouseLeave:p().func,extra:p().node,index:p().number,"aria-label":p().string,tabIndex:p().number,preventScroll:p().bool,type:p().string},H.defaultProps={defaultChecked:!1,indeterminate:!1,onChange:n(),onMouseEnter:n(),onMouseLeave:n(),type:"default"},H.elementType="Checkbox",e.Z=H},973409:function(r,e,t){"use strict";t(429532);var i=t(88648),n=t(636625),a=t(616722),o=t(713097),s=t.n(o),c=t(137959),l=t(705514);class u extends l.Z{get adapter(){return Object.assign(Object.assign({},super.adapter),{handleMouseDown:r=>{this.setState({isHandleGrabbing:!0}),window.addEventListener("mousemove",this.foundation.setHandlePositionByMousePosition),window.addEventListener("mouseup",this.foundation.handleMouseUp)},handleMouseUp:r=>{this.setState({isHandleGrabbing:!1}),window.removeEventListener("mousemove",this.foundation.setHandlePositionByMousePosition),window.removeEventListener("mouseup",this.foundation.handleMouseUp)},getColorPickerFoundation:()=>this.props.foundation,getDOM:()=>this.ref.current})}componentDidUpdate(r,e,t){r.hue!==this.props.hue&&this.setState({handlePosition:this.props.hue/360*this.props.width-this.props.handleSize/2})}render(){return i.createElement("div",{className:s()(`${a.U.PREFIX}-colorSlider`,this.props.className),ref:this.ref,onMouseDown:this.handleClick,style:Object.assign({width:this.props.width,height:this.props.height},this.props.style)},i.createElement("div",{className:`${a.U.PREFIX}-handle`,style:{width:this.props.handleSize,height:this.props.handleSize,left:this.state.handlePosition,top:"50%",transform:"translateY(-50%)",backgroundColor:n.Z.hsvaToHslString({h:this.props.hue,s:100,v:100,a:1})},onMouseDown:r=>this.foundation.handleMouseDown(r)}))}constructor(r){super(r),this.handleClick=r=>{this.foundation.setHandlePositionByMousePosition(r),this.foundation.handleMouseDown(r)},this.foundation=new c.Z(this.adapter),this.state={handlePosition:r.hue/360*r.width-r.handleSize/2,isHandleGrabbing:!1},this.ref=i.createRef()}}e.Z=u},826898:function(r,e,t){"use strict";let i=t(88648).createContext({});e.Z=i},392842:function(r,e,t){"use strict";t.d(e,{Z:function(){return m}}),t(429532),t(874386);var i=t(96008),n=t.n(i),a=t(88648),o=t(201845),s=t.n(o),c=t(713097),l=t.n(c),u=t(420338),p=t(313561),h=t(597773),d=t(437749),f=function(r,e){var t={};for(var i in r)Object.prototype.hasOwnProperty.call(r,i)&&0>e.indexOf(i)&&(t[i]=r[i]);if(null!=r&&"function"==typeof Object.getOwnPropertySymbols)for(var n=0,i=Object.getOwnPropertySymbols(r);n<i.length;n++)0>e.indexOf(i[n])&&Object.prototype.propertyIsEnumerable.call(r,i[n])&&(t[i[n]]=r[i[n]]);return t};let G=0,g=u.U.PREFIX;class m extends a.PureComponent{componentDidMount(){this.sideSheetId=`sidesheet-${G++}`}componentWillUnmount(){clearTimeout(this.timeoutId)}getMaskElement(){var r;let{mask:e,maskStyle:t,maskClosable:i}=this.props;return e?a.createElement("div",Object.assign({"aria-hidden":!0,key:"mask",className:l()(`${g}-mask`,null!==(r=this.props.maskClassName)&&void 0!==r?r:""),style:t,onClick:i?this.onMaskClick:null},this.props.maskExtraProps)):null}renderHeader(){let r,e;let{title:t,closable:i,headerStyle:n,closeIcon:o}=this.props;if(t&&(r=a.createElement("div",{className:`${g}-title`,"x-semi-prop":"title"},this.props.title)),i){let r=o||a.createElement(h.Z,null);e=a.createElement(p.Z,{className:`${g}-close`,key:"close-btn",onClick:this.close,type:"tertiary",icon:r,theme:"borderless",size:"small"})}return a.createElement("div",{className:`${g}-header`,role:"heading","aria-level":1,style:Object.assign({},n)},r,e)}getDialogElement(){var r;let e=f(this.props,[]),t={};e.width&&(t.width=e.width,!e.mask&&(t.width="100%")),e.height&&(t.height=e.height);let i=this.renderHeader();return a.createElement("div",Object.assign({key:"dialog-element",role:"dialog",tabIndex:-1,className:l()(`${g}-inner`,`${g}-inner-wrap`,null!==(r=this.props.dialogClassName)&&void 0!==r?r:"",`${g}-size-${e.size}`),style:Object.assign(Object.assign({},e.style),t)},this.props.wrapperExtraProps),a.createElement("div",{className:`${g}-content`},i,a.createElement("div",{className:`${g}-body`,style:e.bodyStyle,"x-semi-prop":"children"},e.children),e.footer?a.createElement("div",{className:`${g}-footer`,"x-semi-prop":"footer"},e.footer):null))}render(){let r=this.props,{mask:e,className:t,width:i,onClose:n,maskStyle:o,maskClosable:s,maskClassName:c,title:u,closable:p,headerStyle:h,height:G,style:m,size:D,bodyStyle:v,dialogClassName:H,children:y,footer:b,maskExtraProps:I,wrapperExtraProps:C}=r,w=f(r,["mask","className","width","onClose","maskStyle","maskClosable","maskClassName","title","closable","headerStyle","height","style","size","bodyStyle","dialogClassName","children","footer","maskExtraProps","wrapperExtraProps"]),P=l()(t,{[`${g}-fixed`]:!e,[`${g}-size-${this.props.size}`]:!e}),E={};!e&&i&&(E.width=i);let T=(0,d.Z)(w);return a.createElement("div",Object.assign({className:P,style:E},T),this.getMaskElement(),this.getDialogElement())}constructor(){super(...arguments),this.onMaskClick=r=>{r.target===r.currentTarget&&this.close(r)},this.close=r=>{let{onClose:e}=this.props;e&&e(r)}}}m.propTypes={onClose:s().func,closeIcon:s().node},m.defaultProps={onClose:n()}},457227:function(r,e,t){"use strict";t.d(e,{Z:function(){return m}}),t(874386),t(250440),t(268917),t(429532);var i=t(595814),n=t.n(i),a=t(96008),o=t.n(a),s=t(207813),c=t.n(s),l=t(88648),u=t(713097),p=t.n(u),h=t(627813),d=t(764548),f=t(143690),G=t(723402),g=t(619835);function m(){let r,e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},{prefixCls:t=d.UX.PREFIX,filteredValue:i,filterIcon:a="filter",filterDropdownProps:s,onSelect:u,filterDropdownVisible:m,renderFilterDropdown:D,onFilterDropdownVisibleChange:v}=e,{filterDropdown:H=null}=e,y=void 0!==m,b=!y&&"function"==typeof D,[I,C]=(0,l.useState)(i),w=!b&&m,[P,E]=(0,l.useState)(w);(0,l.useEffect)(()=>{void 0!==m&&E(m)},[m]),(0,l.useEffect)(()=>{C(i)},[i]);let T=p()(`${t}-column-filter`,{on:Array.isArray(i)&&i.length});r="function"==typeof a?a(Array.isArray(i)&&i.length>0):(0,l.isValidElement)(a)?a:l.createElement("div",{className:T},"​",l.createElement(h.Z,{role:"button","aria-label":"Filter data with this column","aria-haspopup":"listbox",tabIndex:-1,size:"default"}));let k=Object.assign(Object.assign(Object.assign(Object.assign({},e),s),{tempFilteredValue:I,setTempFilteredValue:C,confirm:function(){let r=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},e=(null==r?void 0:r.filteredValue)||I;!c()(e,i)&&u({filteredValue:e}),r.closeDropdown&&E(!1)},clear:function(){let r=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};C([]),u({filteredValue:[]}),r.closeDropdown&&E(!1)},close:()=>{E(!1)}}),{filterDropdownVisible:y?m:P,onFilterDropdownVisibleChange:r=>{b&&E(r),v(r)}});return H=l.isValidElement(H)?H:function r(e){let t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null,i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:0,{filterMultiple:a=!0,filters:s=[],filteredValue:c=[],filterDropdownVisible:u,onSelect:p=o(),onFilterDropdownVisibleChange:h=o(),trigger:m="click",position:D="bottom",renderFilterDropdown:v,renderFilterDropdownItem:H}=null!=e?e:{},y=n()(e,["tempFilteredValue","setTempFilteredValue","confirm","clear","close","filters"]),b="function"==typeof v?v(y):l.createElement(f.Z.Menu,null,Array.isArray(s)&&s.map((t,n)=>{let o=r=>{let e=r&&r.nativeEvent;e&&(e.stopImmediatePropagation(),e.stopPropagation(),e.preventDefault());let i=[...c],n=i.includes(t.value),o=i.indexOf(t.value);return o>-1?i.splice(o,1):a?i.push(t.value):i=[t.value],p({value:t.value,filteredValue:i,included:!n,domEvent:e})},s=c.includes(t.value),{text:u}=t,{value:h}=t,d=`${i}_${n}`,m="function"==typeof H?H({onChange:o,filterMultiple:a,value:h,text:u,checked:s,filteredValue:c,level:i}):null,D=m&&l.isValidElement(m)?l.cloneElement(m,{key:d}):l.createElement(f.Z.Item,{key:d,onClick:o},a?l.createElement(g.Z,{checked:s},u):l.createElement(G.Z,{checked:s},u));if(Array.isArray(t.children)&&t.children.length){let n=Object.assign(Object.assign({},e),{filters:t.children,trigger:"hover",position:"right"});delete n.filterDropdownVisible,D=r(n,D,i+1)}return D})),I=Object.assign(Object.assign({},e),{onVisibleChange:r=>h(r),trigger:m,position:D,render:b});return null!=u&&(I.visible=u),l.createElement(f.Z,Object.assign({},I,{key:`Dropdown_level_${i}`,className:`${d.UX.PREFIX}-column-filter-dropdown`}),t)}(k,r)}},587:function(r,e,t){"use strict";var i=t(201845),n=t.n(i);e.Z=n().shape({offsetX:n().number,offsetY:n().number,width:n().number,height:n().number})},316953:function(r,e,t){"use strict";t(675373),t.e("86373").then(t.bind(t,523048))},970567:function(r,e,t){"use strict";t(675373),t.e("29259").then(t.bind(t,636652))},35285:function(r,e,t){"use strict";function i(r,e){let t=0,i=r.length-1,n=0,a=0,o=i;for(e<r[0]&&(t=0,a=o+1);a<=o;){if((n=a+Math.floor((o-a)/2))===i||e>=r[n]&&e<r[n+1]){t=n;break}r[n]<e?a=n+1:o=n-1}return t}function n(r){return r&&!r.paused&&!r.ended&&0!==r.playbackRate&&0!==r.readyState}t.d(e,{k:function(){return n},s:function(){return i}})},593926:function(r,e,t){"use strict";t.d(e,{W:function(){return a}});var i=t(134761);t(209955),t(268917),t(112587),t(17322),t(560401),t(779566),t(69896),t(416555),t(404948);var n=t(819203);class a{static getRateIndexByRate(r){return a.FREQ.indexOf(r)}static parseADTS(r,e){let t,i;let n=r.length,o=0;for(;o+2<n&&(255!==r[o]||(246&r[o+1])!=240);){;o++}if(o>=n)return;let s=o,c=[],l=(60&r[o+2])>>>2,u=a.FREQ[l];if(!u)throw Error(`Invalid sampling index: ${l}`);let p=((192&r[o+2])>>>6)+1,h=(1&r[o+2])<<2|(192&r[o+3])>>>6,{config:d,codec:f}=a._getConfig(l,h,p),G=0,g=a.getFrameDuration(u);for(;o+7<n;){if(255!==r[o]||(246&r[o+1])!=240){o++;continue}if(!(i=(3&r[o+3])<<11|r[o+4]<<3|(224&r[o+5])>>5)||n-o<i)break;t=(1&~r[o+1])*2,c.push({pts:e+G*g,data:r.subarray(o+7+t,o+i)}),G++,o+=i}return{skip:s,remaining:o>=n?void 0:r.subarray(o),frames:c,samplingFrequencyIndex:l,sampleRate:u,objectType:p,channelCount:h,codec:f,config:d,originCodec:`mp4a.40.${p}`}}static parseAudioSpecificConfig(r){if(!r.length)return;let e=r[0]>>>3,t=(7&r[0])<<1|r[1]>>>7,i=(120&r[1])>>>3,n=a.FREQ[t];if(!n)return;let{config:o,codec:s}=a._getConfig(t,i,e);return{samplingFrequencyIndex:t,sampleRate:n,objectType:e,channelCount:i,config:o,codec:s,originCodec:`mp4a.40.${e}`}}static getFrameDuration(r){let e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:9e4;return 1024*e/r}static _getConfig(r,e,t){let i,a;let o=[];return n.vU?r>=6?(i=5,a=r-3):(i=2,a=r):n.Dt?(i=2,a=r):(i=5,a=r,r>=6?a=r-3:1===e&&(i=2,a=r)),o[0]=i<<3,o[0]|=(14&r)>>1,o[1]=(1&r)<<7,o[1]|=e<<3,5===i&&(o[1]|=(14&a)>>1,o[2]=(1&a)<<7,o[2]|=8,o[3]=0),{config:o,codec:`mp4a.40.${i}`}}static getSilentFrame(r,e){if("mp4a.40.2"===r){if(1===e)return new Uint8Array([0,200,0,128,35,128]);if(2===e)return new Uint8Array([33,0,73,144,2,25,0,35,128]);if(3===e)return new Uint8Array([0,200,0,128,32,132,1,38,64,8,100,0,142]);if(4===e)return new Uint8Array([0,200,0,128,32,132,1,38,64,8,100,0,128,44,128,8,2,56]);if(5===e)return new Uint8Array([0,200,0,128,32,132,1,38,64,8,100,0,130,48,4,153,0,33,144,2,56]);if(6===e)return new Uint8Array([0,200,0,128,32,132,1,38,64,8,100,0,130,48,4,153,0,33,144,2,0,178,0,32,8,224])}else{if(1===e)return new Uint8Array([1,64,34,128,163,78,230,128,186,8,0,0,0,28,6,241,193,10,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,94]);if(2===e||3===e)return new Uint8Array([1,64,34,128,163,94,230,128,186,8,0,0,0,0,149,0,6,241,161,10,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,94])}}}(0,i._)(a,"FREQ",[96e3,88200,64e3,48e3,44100,32e3,24e3,22050,16e3,12e3,11025,8e3,7350])},494791:function(r,e,t){"use strict";t.d(e,{R:function(){return function r(){for(var e=arguments.length,t=Array(e),a=0;a<e;a++)t[a]=arguments[a];let[o,...s]=t;if(o&&!n(o))return o;let c=s.filter(r=>n(r));for(let e of c)for(let t in e)"abr"===t&&"flv"===o.protocol?o[t]=(0,i._)({},o[t],e[t]):Object.prototype.hasOwnProperty.call(e,t)&&(n(o[t])&&null!==o[t]&&n(e[t])&&null!==e[t]?r(o[t],e[t]):o[t]=e[t]);return o}}});var i=t(520739);function n(r){return"[object Object]"===Object.prototype.toString.call(r)}t(927234),t(874386)},619491:function(r,e,t){"use strict";function i(r){let e=new XMLHttpRequest;e.open("get",r,!1);let t=null;return e.onload=()=>{let r=e.responseText;t={},Function("exports","module","define",r)(t)},e.onerror=()=>{},e.send(),t}t.d(e,{j:function(){return i}}),t(70372)},402347:function(r,e,t){"use strict";t.d(e,{Z:function(){return a}}),t(675373),t(882732),t(544943),t(874386);var i=t(127694);async function n(r,e){let t=arguments.length>2&&void 0!==arguments[2]?arguments[2]:3,i=0;for(;i<t;)try{await r.audioWorklet.addModule(e);return}catch(r){if(++i===t)throw r}}async function a(r){let e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},{trackId:a}=e,o=new URL(t(562856),t.b);try{return await n(r,o),new AudioWorkletNode(r,"my-worklet-processor",{outputChannelCount:[r.destination.channelCount],processorOptions:{trackId:a}})}catch(r){return i.T.setLoadModuleError(),null}}},561557:function(r,e,t){"use strict";t.d(e,{VB:function(){return a.V},Wc:function(){return n.W},lE:function(){return o.l},xW:function(){return i.x}});var i=t(896925),n=t(764767),a=t(446212),o=t(797791)},297922:function(r,e,t){"use strict";t.d(e,{UX:function(){return n},j2:function(){return a},o5:function(){return o}});var i=t(818749);let n={PREFIX:`${i.T}-cascader`,PREFIX_OPTION:`${i.T}-cascader-option`},a={SIZE_SET:["small","large","default"],VALIDATE_STATUS:["success","default","error","warning"],IS_KEY:"isKey",IS_VALUE:"isValue",SHOW_NEXT_BY_CLICK:"click",SHOW_NEXT_BY_HOVER:"hover",LEAF_ONLY_MERGE_TYPE:"leafOnly",AUTO_MERGE_VALUE_MERGE_TYPE:"autoMergeValue",NONE_MERGE_TYPE:"none",SEARCH_POSITION_TRIGGER:"trigger",SEARCH_POSITION_CUSTOM:"custom",RELATED:"related",UN_RELATED:"unRelated"},o="_SEMI_CASCADER_SPLIT_"},481713:function(r,e,t){"use strict";t(675373),t(429532),t(338172),t(954372),t(826893);var i=t(883520),n=t(636625),a=t(445289);class o extends i.Z{constructor(r){super(Object.assign({},r)),this.getInputValue=()=>{let{currentColor:r}=this._adapter.getProps(),{format:e}=this._adapter.getStates(),t=r.rgba,i=r.hsva,n=r.hex;return"rgba"===e?`${t.r},${t.g},${t.b}`:"hsva"===e?`${i.h},${i.s},${i.v}`:n.slice(0,7)},this.getValueByInputValue=r=>{let{format:e}=this.getStates();if("rgba"===e){let t=(0,a.Z)(r,e);if(t)return t}else if("hsva"===e){let t=(0,a.Z)(r,e);if(t)return t}else if("hex"===e&&(!r.startsWith("#")&&(r="#"+r),/#[\d\w]{6,8}/.test(r)))return r;return!1},this.handlePickValueWithStraw=()=>{var r,e,t,i;return r=this,e=void 0,t=void 0,i=function*(){let r=this._adapter.getColorPickerFoundation();if(!window.EyeDropper)return;let e=new EyeDropper;try{let t=(yield e.open()).sRGBHex;if(t.startsWith("#"))r.handleChange(t,"hex");else if(t.startsWith("rgba")){let e=n.Z.rgbaStringToRgba(t);e.a=1,r.handleChange(e,"rgba")}}catch(r){}},new(t||(t=Promise))(function(n,a){function o(r){try{c(i.next(r))}catch(r){a(r)}}function s(r){try{c(i.throw(r))}catch(r){a(r)}}function c(r){var e;r.done?n(r.value):((e=r.value)instanceof t?e:new t(function(r){r(e)})).then(o,s)}c((i=i.apply(r,e||[])).next())})},this.handleInputValueChange=r=>{this._adapter.setState({inputValue:r})},this.handleFormatChange=r=>{this._adapter.setState({format:r})}}}e.Z=o},415317:function(r,e,t){"use strict";t.d(e,{U:function(){return n},j:function(){return a}});var i=t(818749);let n={PREFIX:`${i.T}-tag`},a={TAG_SIZE:["default","small","large"],TAG_COLOR:["grey","red","pink","purple","violet","indigo","blue","light-blue","cyan","teal","green","light-green","lime","yellow","amber","orange","white"],TAG_TYPE:["light","solid","ghost"],AVATAR_SHAPE:["square","circle"]}},220006:function(r,e,t){"use strict";t(413806),t(826893),t(268917);var i=t(251526),n=t.n(i),a=t(419936),o=t.n(a),s=t(43715),c=t.n(s);e.Z=(r,e)=>{let t=[];if(c()(e)||n()(e))t=r.split(e);else if(o()(e)){let i=e[0];t=r;for(let r=1;r<e.length;r++)t=t.split(e[r]).join(i);t=t.split(i)}else t.push(r);return t}},815827:function(r,e,t){"use strict";t(429532);var i=t(88648);function n(){return(n=Object.assign||function(r){for(var e=1;e<arguments.length;e++){var t=arguments[e];for(var i in t)Object.prototype.hasOwnProperty.call(t,i)&&(r[i]=t[i])}return r}).apply(this,arguments)}let a=i.forwardRef(function(r,e){return i.createElement("svg",n({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg",width:"1em",height:"1em",focusable:!1,ref:e},r),i.createElement("path",{fillRule:"evenodd",clipRule:"evenodd",d:"M12.8013 19.9762C12.3693 20.4436 11.6307 20.4436 11.1986 19.9762L3.11756 11.2346C2.74913 10.8361 2.72958 10.2274 3.07168 9.80599L6.92716 5.05714C7.13438 4.8019 7.44562 4.65369 7.77439 4.65369H16.2256C16.5544 4.65369 16.8656 4.8019 17.0728 5.05714L20.9283 9.80599C21.2704 10.2274 21.2508 10.8361 20.8824 11.2346L12.8013 19.9762ZM4.45944 10.4765L12 18.6334L19.5405 10.4765L16.031 6.15369H7.96901L4.45944 10.4765ZM16.0867 9.09336L16.0954 10.4557C15.3615 10.4557 14.6822 10.2315 14.1281 9.85065V12.5739C14.1281 13.9502 12.964 15.0659 11.5281 15.0659C10.0922 15.0659 8.9281 13.9502 8.9281 12.5739C8.9281 11.1976 10.0922 10.0819 11.5281 10.0819C11.6486 10.0819 11.7672 10.0897 11.8834 10.1049V11.4964C11.7713 11.4625 11.6519 11.4442 11.5281 11.4442C10.8771 11.4442 10.3494 11.95 10.3494 12.5739C10.3494 13.1978 10.8771 13.7036 11.5281 13.7036C12.179 13.7036 12.7067 13.1978 12.7067 12.5739V7.21604H14.1281C14.1281 8.25285 15.005 9.09336 16.0867 9.09336Z",fill:"currentColor"}))});a.elementType="Icon",e.Z=a},186710:function(r,e,t){"use strict";var i=t(520739),n=t(878389),a=t(563097),o=t(912923),s=t(88648),c=t(9608);(0,t(479724).n)(r=>{let{playerRef:e}=(0,s.useContext)(o.E),t=(0,s.useRef)();return(0,s.useEffect)(()=>{let r=e.current;return r.defineProperty("changeDefinition",{configurable:!0,value(r){var e;null===(e=t.current)||void 0===e||e.changeDefinition(r)}}),r.defineProperty("curDefinition",{configurable:!0,get(){var r;return null===(r=t.current)||void 0===r?void 0:r.getCurrentDefinition()}}),()=>{let r=e.current;if(!!r)r.removeProperty("changeDefinition"),r.removeProperty("curDefinition")}},[]),(0,a.jsx)(c.w,(0,n._)((0,i._)({},r),{ref:t}))})},2365:function(r,e,t){"use strict";t.d(e,{Q:function(){return i}}),t(874386),t(429532);let i=(r,e,t,i,n)=>{let[a,o=0,s,c=1]=i,{width:l,height:u}=r.getBoundingClientRect(),{videoHeight:p,videoWidth:h}=e;if(!p||!h||!l||!u)return;let d=1/c,f="center center",G=t%180!=0;if(1===c)G&&(d=h>p?p/h:l/u),Object.assign(e.style,{transform:`translate(0,0) rotate(${t}deg) scale(${d})`,transformOrigin:f}),n&&Object.assign(n.style,{transform:`translate(0,0) rotate(${t}deg) scale(${G?u/l:1})`,transformOrigin:f})}},755609:function(r,e,t){"use strict";function i(r,e,t,i,n,a,o){try{var s=r[a](o),c=s.value}catch(r){t(r);return}s.done?e(c):Promise.resolve(c).then(i,n)}t.d(e,{p:function(){return l}});function n(r){for(var e=1;e<arguments.length;e++){var t=null!=arguments[e]?arguments[e]:{},i=Object.keys(t);"function"==typeof Object.getOwnPropertySymbols&&(i=i.concat(Object.getOwnPropertySymbols(t).filter(function(r){return Object.getOwnPropertyDescriptor(t,r).enumerable}))),i.forEach(function(e){var i,n,a;i=r,n=e,a=t[e],n in i?Object.defineProperty(i,n,{value:a,enumerable:!0,configurable:!0,writable:!0}):i[n]=a})}return r}function a(r,e){return e=null!=e?e:{},Object.getOwnPropertyDescriptors?Object.defineProperties(r,Object.getOwnPropertyDescriptors(e)):(function(r,e){var t=Object.keys(r);if(Object.getOwnPropertySymbols){var i=Object.getOwnPropertySymbols(r);t.push.apply(t,i)}return t})(Object(e)).forEach(function(t){Object.defineProperty(r,t,Object.getOwnPropertyDescriptor(e,t))}),r}var o=function(){};function s(r){return c.apply(this,arguments)}function c(){var r;return r=function(r){var e,t,i,n,a,s,c,l,u,p,h,d,f,G,g,m,D;return function(r,e){var t,i,n,a,o={label:0,sent:function(){if(1&n[0])throw n[1];return n[1]},trys:[],ops:[]};return a={next:s(0),throw:s(1),return:s(2)},"function"==typeof Symbol&&(a[Symbol.iterator]=function(){return this}),a;function s(a){return function(s){return function(a){if(t)throw TypeError("Generator is already executing.");for(;o;)try{if(t=1,i&&(n=2&a[0]?i.return:a[0]?i.throw||((n=i.return)&&n.call(i),0):i.next)&&!(n=n.call(i,a[1])).done)return n;switch(i=0,n&&(a=[2&a[0],n.value]),a[0]){case 0:case 1:n=a;break;case 4:return o.label++,{value:a[1],done:!1};case 5:o.label++,i=a[1],a=[0];continue;case 7:a=o.ops.pop(),o.trys.pop();continue;default:if(!(n=(n=o.trys).length>0&&n[n.length-1])&&(6===a[0]||2===a[0])){o=0;continue}if(3===a[0]&&(!n||a[1]>n[0]&&a[1]<n[3])){o.label=a[1];break}if(6===a[0]&&o.label<n[1]){o.label=n[1],n=a;break}if(n&&o.label<n[2]){o.label=n[2],o.ops.push(a);break}n[2]&&o.ops.pop(),o.trys.pop();continue}a=e.call(r,o)}catch(r){a=[6,r],i=0}finally{t=n=0}if(5&a[0])throw a[1];return{value:a[0]?a[1]:void 0,done:!0}}([a,s])}}}(this,function(v){switch(v.label){case 0:e=r.url,t=r.method,i=r.data,a=void 0===(n=r.success)?o:n,c=void 0===(s=r.fail)?o:s,u=void 0!==(l=r.withCredentials)&&l,h=void 0===(p=r.getResponseText)?o:p,d={method:t,headers:{"Content-Type":"application/json"},credentials:u?"include":"omit"},"POST"===t&&i&&(d.body=i),v.label=1;case 1:return v.trys.push([1,4,,5]),[4,fetch(e,d)];case 2:return[4,(f=v.sent()).text()];case 3:if(G=v.sent(),h(G),f.status>=400)throw Error(G||f.statusText);return g=G.trim()?JSON.parse(G):{},a(g),[3,5];case 4:var H,y;return H=m=v.sent(),D=(null!=(y=Error)&&"undefined"!=typeof Symbol&&y[Symbol.hasInstance]?!!y[Symbol.hasInstance](H):H instanceof y)?m:Error("Network request failed"),c(D),[3,5];case 5:return[2]}})},(c=function(){var e=this,t=arguments;return new Promise(function(n,a){var o=r.apply(e,t);function s(r){i(o,n,a,s,c,"next",r)}function c(r){i(o,n,a,s,c,"throw",r)}s(void 0)})}).apply(this,arguments)}var l=function(){return window.fetch?{get:function(r){s(a(n({},r),{method:"GET"})).catch(o)},post:function(r){s(a(n({},r),{method:"POST"})).catch(o)}}:{get:o,post:o}}},502697:function(r,e,t){"use strict";t.d(e,{Bi:function(){return a}});var i=t(101380),n=t(688950);t(835353);var a=function(){function r(){this.checksum=4294967295}return r.prototype.update=function(r){var e,t;try{for(var n=(0,i.XA)(r),a=n.next();!a.done;a=n.next()){var s=a.value;this.checksum=this.checksum>>>8^o[(this.checksum^s)&255]}}catch(r){e={error:r}}finally{try{a&&!a.done&&(t=n.return)&&t.call(n)}finally{if(e)throw e.error}}return this},r.prototype.digest=function(){return(4294967295^this.checksum)>>>0},r}(),o=(0,n.r3)([0,1996959894,3993919788,2567524794,124634137,1886057615,3915621685,2657392035,249268274,2044508324,3772115230,2547177864,162941995,2125561021,3887607047,2428444049,498536548,1789927666,4089016648,2227061214,450548861,1843258603,4107580753,2211677639,325883990,1684777152,4251122042,2321926636,335633487,1661365465,4195302755,2366115317,997073096,1281953886,3579855332,2724688242,1006888145,1258607687,3524101629,2768942443,901097722,1119000684,3686517206,2898065728,853044451,1172266101,3705015759,2882616665,651767980,1373503546,3369554304,3218104598,565507253,1454621731,3485111705,3099436303,671266974,1594198024,3322730930,2970347812,795835527,1483230225,3244367275,3060149565,1994146192,31158534,2563907772,4023717930,1907459465,112637215,2680153253,3904427059,2013776290,251722036,2517215374,3775830040,2137656763,141376813,2439277719,3865271297,1802195444,476864866,2238001368,4066508878,1812370925,453092731,2181625025,4111451223,1706088902,314042704,2344532202,4240017532,1658658271,366619977,2362670323,4224994405,1303535960,984961486,2747007092,3569037538,1256170817,1037604311,2765210733,3554079995,1131014506,879679996,2909243462,3663771856,1141124467,855842277,2852801631,3708648649,1342533948,654459306,3188396048,3373015174,1466479909,544179635,3110523913,3462522015,1591671054,702138776,2966460450,3352799412,1504918807,783551873,3082640443,3233442989,3988292384,2596254646,62317068,1957810842,3939845945,2647816111,81470997,1943803523,3814918930,2489596804,225274430,2053790376,3826175755,2466906013,167816743,2097651377,4027552580,2265490386,503444072,1762050814,4150417245,2154129355,426522225,1852507879,4275313526,2312317920,282753626,1742555852,4189708143,2394877945,397917763,1622183637,3604390888,2714866558,953729732,1340076626,3518719985,2797360999,1068828381,1219638859,3624741850,2936675148,906185462,1090812512,3747672003,2825379669,829329135,1181335161,3412177804,3160834842,628085408,1382605366,3423369109,3138078467,570562233,1426400815,3317316542,2998733608,733239954,1555261956,3268935591,3050360625,752459403,1541320221,2607071920,3965973030,1969922972,40735498,2617837225,3943577151,1913087877,83908371,2512341634,3803740692,2075208622,213261112,2463272603,3855990285,2094854071,198958881,2262029012,4057260610,1759359992,534414190,2176718541,4139329115,1873836001,414664567,2282248934,4279200368,1711684554,285281116,2405801727,4167216745,1634467795,376229701,2685067896,3608007406,1308918612,956543938,2808555105,3495958263,1231636301,1047427035,2932959818,3654703836,1088359270,936918e3,2847714899,3736837829,1202900863,817233897,3183342108,3401237130,1404277552,615818150,3134207493,3453421203,1423857449,601450431,3009837614,3294710456,1567103746,711928724,3020668471,3272380065,1510334235,755167117])},167961:function(r){var e,t;e=0,t=function(){"use strict";function r(r,e){if(!(r instanceof e))throw TypeError("Cannot call a class as a function")}function e(r,e){for(var t=0;t<e.length;t++){var i=e[t];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(r,i.key,i)}}function t(r,t,i){return t&&e(r.prototype,t),i&&e(r,i),Object.defineProperty(r,"prototype",{writable:!1}),r}function i(r,e){if(r){if("string"==typeof r)return n(r,e);var t=Object.prototype.toString.call(r).slice(8,-1);return"Object"===t&&r.constructor&&(t=r.constructor.name),"Map"===t||"Set"===t?Array.from(r):"Arguments"===t||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)?n(r,e):void 0}}function n(r,e){(null==e||e>r.length)&&(e=r.length);for(var t=0,i=Array(e);t<e;t++)i[t]=r[t];return i}var a,o,s=function(){return"undefined"==typeof window},c=function(r,e,t){var i=function(r,e){for(var t=0;t<r.length||t<e.length;++t){var i=0,n=0;if(t<r.length&&(i=parseInt(r[t],10)),t<e.length&&(n=parseInt(e[t],10)),i>n)return 1;if(i<n)return -1}return 0}(r.split("."),t.split("."));return"=="===e&&0===i||">"===e&&i>0||">="===e&&i>=0||"<"===e&&i<0||"<="===e&&i<=0},l=new(function(){function e(){r(this,e),this._prefix="[PC抖音客户端 SDK Monitor]:  "}return t(e,[{key:"log",value:function(r){}},{key:"info",value:function(r){}},{key:"warn",value:function(r){}},{key:"error",value:function(r){}}]),e}());(a=o||(o={}))[a.Success=0]="Success",a[a.Failure=-1]="Failure",a[a.EnvError=-2]="EnvError",a[a.RuleError=-3]="RuleError",a[a.Unauthorized=-4]="Unauthorized",a[a.SDKInnerError=-5]="SDKInnerError",a[a.Unknown=-9]="Unknown";var u=new(function(){function e(){r(this,e),this._methodRuleMap={}}return t(e,[{key:"registerMethodRules",value:function(r){var e=r.map,t=void 0===e?"":e,i=r.target;t?this._methodRuleMap[t]=void 0===i?[]:i:l.error("register method rules error")}},{key:"getRuntimeOS",value:function(){return function(){if(s())return"ssr";var r="Win32"===(null==navigator?void 0:navigator.platform)||"Windows"===(null==navigator?void 0:navigator.platform),e="Mac68K"===(null==navigator?void 0:navigator.platform)||"MacPPC"===(null==navigator?void 0:navigator.platform)||"Macintosh"===(null==navigator?void 0:navigator.platform)||"MacIntel"===(null==navigator?void 0:navigator.platform),t="X11"===(null==navigator?void 0:navigator.platform)&&!r&&!e,i=String(null==navigator?void 0:navigator.platform).indexOf("Linux")>-1;return e?"mac":t?"unix":i?"linux":r?"windows":"unknown"}()}},{key:"getRuntimeVersion",value:function(){var r,e,t;return s()?(l.error("can't get client version in ssr"),""):(null===(t=null===(e=null===(r=null==window?void 0:window.TTE_ENV)||void 0===r?void 0:r.initPageStore)||void 0===e?void 0:e.page)||void 0===t?void 0:t.version)||""}},{key:"checkOS",value:function(r){return!r||"*"===r||this.getRuntimeOS()===r}},{key:"checkMethodAvailable",value:function(r){var e,t,i;return!!this.checkInClient()&&void 0!==(null===(i=null===(t=null===(e=null==window?void 0:window.TTE_ENV)||void 0===e?void 0:e.bridge)||void 0===t?void 0:t.EVENTS)||void 0===i?void 0:i.TO_MAIN_EVENT_TYPES[r])}},{key:"canIUse",value:function(r){var e=this.checkMethodAvailable(r);return{code:o.Success,data:{isAvailable:e}}}},{key:"checkVersion",value:function(r){var e,t,n,a,o,s,l,u;return!r||(e=this.getRuntimeVersion(),s=void 0===(o=(a=(t=r.split("-"),n=2,function(r){if(Array.isArray(r))return r}(t)||function(r,e){var t=null==r?null:"undefined"!=typeof Symbol&&r[Symbol.iterator]||r["@@iterator"];if(null!=t){var i,n,a=[],o=!0,s=!1;try{for(t=t.call(r);!(o=(i=t.next()).done)&&(a.push(i.value),!e||a.length!==e);o=!0);}catch(r){s=!0,n=r}finally{try{o||null==t.return||t.return()}finally{if(s)throw n}}return a}}(t,2)||i(t,n)||function(){throw TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()))[0])?"":o,u=void 0===(l=a[1])?"":l,!s&&!u||(s?u?c(e,">=",s)&&c(e,"<=",u):c(e,">=",s):c(e,"<=",u)))}},{key:"checkDetail",value:function(r){if(!r||0===r.length)return!0;var e,t=!1,n=function(r,e){var t="undefined"!=typeof Symbol&&r[Symbol.iterator]||r["@@iterator"];if(!t){if(Array.isArray(r)||(t=i(r))){t&&(r=t);var n=0,a=function(){};return{s:a,n:function(){return n>=r.length?{done:!0}:{done:!1,value:r[n++]}},e:function(r){throw r},f:a}}throw TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var o,s=!0,c=!1;return{s:function(){t=t.call(r)},n:function(){var r=t.next();return s=r.done,r},e:function(r){c=!0,o=r},f:function(){try{s||null==t.return||t.return()}finally{if(c)throw o}}}}(r);try{for(n.s();!(e=n.n()).done;){var a=e.value.os;if(t=this.checkOS(a))break}}catch(r){n.e(r)}finally{n.f()}return t}},{key:"checkRule",value:function(r){var e=r.target;return!r||!!this.checkDetail(void 0===e?[]:e)}},{key:"on",value:function(r,e){return this.checkInClient()?window.TTE_ENV.bridge.on(r,e):(l.warn("turn on listening to ".concat(r," failed, env is not in client.")),!1)}},{key:"off",value:function(r,e){return this.checkInClient()?window.TTE_ENV.bridge.off(r,e):(l.warn("turn off listening to ".concat(r," failed, env is not in client.")),!1)}},{key:"checkInClient",value:function(){var r;return!s()&&void 0!==(null===(r=null==window?void 0:window.TTE_ENV)||void 0===r?void 0:r.bridge)}},{key:"call",value:function(r){var e=this,t=r.params,i=void 0===t?{}:t,n=r.method,a=r.rule,s=r.transParameters,c=void 0!==s&&s;return new Promise(function(r){var t={code:o.Unknown,data:null,msg:"Something went wrong. maybe polyfill."};try{if(!e.checkInClient()){var s="WARN:[".concat(n,"]The current environment is not inside the client.");return t.code=o.EnvError,t.msg=s,l.warn(s),void r(t)}if(!e.checkMethodAvailable(n)){var u="WARN: [".concat(n,"]The current system doesn't support this method.");return t.code=o.RuleError,t.msg=u,l.warn(u),void r(t)}if(!e.checkRule(a)){var p="WARN: [".concat(n,"]The method invocation environment does not meet the rules.");return t.code=o.RuleError,t.msg=p,l.warn(p),void r(t)}}catch(e){var h="Bridge SDK Inner Error: ".concat(n,"-{").concat(JSON.stringify(i),"}. ").concat(e.message," | ").concat(e.stack);return l.error(h),t.msg=h,t.code=o.SDKInnerError,void r(t)}window.TTE_ENV.bridge.invoke(n,c?i:{data:i}).then(function(e){var i,n,a;void 0!==(null==e?void 0:e._to_sdk)?(t.code=null!==(i=e._to_sdk.code)&&void 0!==i?i:t.code,t.data=null!==(n=e.data)&&void 0!==n?n:null,t.msg=null!==(a=e._to_sdk.msg)&&void 0!==a?a:"success"):(t.code=o.Success,t.data=e,t.msg="success"),r(t)}).catch(function(e){var a="Bridge SDK Execute Failed: ".concat(n,"-{").concat(JSON.stringify(i),"}}. ").concat(e.message," | ").concat(e.stack);t.code=o.Failure,t.msg=e.message,l.error(a),r(t)})})}}]),e}());function p(r){Object.keys(r).forEach(function(e){var t,i=(null===(t=r[e])||void 0===t?void 0:t.rule)||{};u.registerMethodRules(i)})}var h={target:[{os:"*"}],map:"app.getVersion"};function d(){return u.call({rule:h,method:"GET_VERSION"})}d.rule=h;var f={target:[{os:"*"}],map:"app.setAlwaysOnTop"};function G(r){return u.call({rule:f,method:"SET_ALWAYS_ON_TOP",params:r,transParameters:!0})}G.rule=f;var g={target:[{os:"*"}],map:"app.changeToOriginalMode"};function m(){return u.call({rule:g,method:"CHANGE_TO_ORIGINAL_MODE"})}m.rule=g;var D={target:[{os:"*"}],map:"app.changeToSmallMode"};function v(){return u.call({rule:D,method:"CHANGE_TO_SMALL_MODE"})}v.rule=D;var H={target:[{os:"*"}],map:"app.isAlwaysOnTop"};function y(){return u.call({rule:H,method:"IS_ALWAYS_ON_TOP"})}y.rule=H;var b={target:[{os:"*"}],map:"app.mainWindowMoveTop"};function I(){return u.call({rule:b,method:"MAIN_WINDOW_MOVE_TOP"})}I.rule=b;var C={target:[{os:"*"}],map:"app.minimize"};function w(){return u.call({rule:C,method:"WINDOW_MIN"})}w.rule=C;var P={target:[{os:"*"}],map:"app.handlePageReady"};function E(){return u.call({rule:P,method:"PAGE_READY"})}E.rule=P;var T={target:[{os:"*"}],map:"app.maximize"};function k(){return u.call({rule:T,method:"WINDOW_MAX"})}k.rule=T;var S={target:[{os:"*"}],map:"app.canGoBack"};function x(){return u.call({rule:S,method:"CAN_GO_BACK"})}x.rule=S;var _={target:[{os:"*"}],map:"app.clearCookie"};function M(){return u.call({rule:_,method:"CLEAR_COOKIE"})}M.rule=_;var R={target:[{os:"*"}],map:"app.getWid"};function A(){return u.call({rule:R,method:"GET_WID"})}A.rule=R;var O={target:[{os:"*"}],map:"app.closeParent"};function U(){return u.call({rule:O,method:"CLOSE_PARENT"})}U.rule=O;var L={target:[{os:"*"}],map:"app.closeWindow"};function j(){return u.call({rule:L,method:"WINDOW_CLOSE"})}j.rule=L;var N={target:[{os:"*"}],map:"app.getAllClientLog"};function W(){return u.call({rule:N,method:"GET_ALL_CLIENT_LOG"})}W.rule=N;var V={target:[{os:"*"}],map:"app.getAppConfigItem"};function F(r){return u.call({rule:V,method:"GET_APP_CONFIG_ITEM",params:r})}F.rule=V;var X={target:[{os:"*"}],map:"app.goBack"};function B(){return u.call({rule:X,method:"GO_BACK"})}B.rule=X;var Z={target:[{os:"*"}],map:"app.getPageStore"};function z(){return u.call({rule:Z,method:"GET_PAGE_STORE"})}z.rule=Z;var $={target:[{os:"*"}],map:"app.getSettings"};function Y(){return u.call({rule:$,method:"GET_SETTINGS"})}Y.rule=$;var K={target:[{os:"*"}],map:"app.isFull"};function J(){return u.call({rule:K,method:"WINDOW_IS_FULL"})}J.rule=K;var q={target:[{os:"*"}],map:"app.openWallpaperWindow"};function Q(){return u.call({rule:q,method:"OPEN_WALLPAPER_WINDOW"})}Q.rule=q;var rr={target:[{os:"*"}],map:"app.getChannelId"};function re(){return u.call({rule:rr,method:"GET_CHANNEL_ID"})}re.rule=rr;var rt={target:[{os:"*"}],map:"app.reload"};function ri(){return u.call({rule:rt,method:"RELOAD"})}ri.rule=rt;var rn={target:[{os:"mac"}],map:"app.setFullScreenable"};function ra(r){return u.call({rule:rn,method:"SET_FULL_SCREENABLE",params:r,transParameters:!0})}ra.rule=rn;var ro={target:[{os:"*"}],map:"app.getAllWindowData"};function rs(){return u.call({rule:ro,method:"GET_ALL_WINDOW_DATA"})}rs.rule=ro;var rc={target:[{os:"*"}],map:"app.reloadWindowFromId"};function rl(){return u.call({rule:rc,method:"RELOAD_FROM_ID"})}rl.rule=rc;var ru={target:[{os:"*"}],map:"app.reportStat"};function rp(r){return u.call({rule:ru,method:"REPORT_STAT",params:r,transParameters:!0})}rp.rule=ru;var rh={target:[{os:"*"}],map:"app.setAppConfigItem"};function rd(r){return u.call({rule:rh,method:"SET_APP_CONFIG_ITEM",params:r})}rd.rule=rh;var rf={target:[{os:"*"}],map:"app.setAutoStart"};function rG(r){return u.call({rule:rf,method:"SET_AUTO_START",params:r})}rG.rule=rf;var rg={target:[{os:"*"}],map:"app.setCloseToTray"};function rm(r){return u.call({rule:rg,method:"SET_CLOSE_TO_TRAY",params:r})}rm.rule=rg;var rD={target:[{os:"*"}],map:"app.setMiniMizeToTray"};function rv(r){return u.call({rule:rD,method:"SET_MINIMIZE_TO_TRAY",params:r})}rv.rule=rD;var rH={target:[{os:"*"}],map:"app.showAbout"};function ry(r){return u.call({rule:rH,method:"WINDOW_SHOW_ABOUT",params:r,transParameters:!0})}ry.rule=rH;var rb={target:[{os:"*"}],map:"app.syncLoginState"};function rI(r){return u.call({rule:rb,method:"SYNC_LOGIN_STATE",params:r,transParameters:!0})}rI.rule=rb;var rC={target:[{os:"*"}],map:"app.themeChange"};function rw(r){return u.call({rule:rC,method:"THEME_CHANGE",params:r})}rw.rule=rC;var rP={target:[{os:"*"}],map:"app.getAllDisplays"};function rE(){return u.call({rule:rP,method:"GET_ALL_DISPLAYS"})}rE.rule=rP;var rT={target:[{os:"*"}],map:"app.getPrimaryDisplay"};function rk(){return u.call({rule:rT,method:"GET_PRIMARY_DISPLAY"})}rk.rule=rT;var rS={target:[{os:"*"}],map:"app.navigationGoBack"};function rx(){return u.call({rule:rS,method:"NAVIGATION_GO_BACK"})}rx.rule=rS;var r_={target:[{os:"windows"}],map:"app.getAutoStart"};function rM(){return u.call({rule:r_,method:"GET_AUTO_START"})}rM.rule=r_;var rR={target:[{os:"*"}],map:"app.showUpdateModal"};function rA(){return u.call({rule:rR,method:"SHOW_UPDATE_MODAL"})}rA.rule=rR;var rO={target:[{os:"*"}],map:"app.getIsUpdatePackageReady"};function rU(){return u.call({rule:rO,method:"GET_IS_UPDATE_PACKAGE_READY"})}rU.rule=rO;var rL={target:[{os:"*"}],map:"app.getClientUpdateInfo"};function rj(){return u.call({rule:rL,method:"GET_CLIENT_UPDATE_INFO"})}rj.rule=rL;var rN={target:[{os:"*"}],map:"app.quitUpdateTip"};function rW(){return u.call({rule:rN,method:"QUIT_UPDATE_TIP"})}rW.rule=rN;var rV={target:[{os:"mac"}],map:"app.getMediaAccessStatus"};function rF(r){return u.call({rule:rV,method:"GET_MEDIA_ACCESS_STATUS",params:r,transParameters:!0})}rF.rule=rV;var rX={target:[{os:"mac"}],map:"app.askForMediaAccess"};function rB(r){return u.call({rule:rX,method:"ASK_FOR_MEDIA_ACCESS",params:r,transParameters:!0})}rB.rule=rX;var rZ={target:[{os:"mac"}],map:"app.getIsMas"};function rz(){return u.call({rule:rZ,method:"GET_IS_MAS"})}rz.rule=rZ;var r$={target:[{os:"*"}],map:"app.getIsFrontShow"};function rY(){return u.call({rule:r$,method:"GET_IS_FRONT_SHOW"})}rY.rule=r$;var rK={target:[{os:"*"}],map:"app.downloadWallpaper"};function rJ(r){return u.call({rule:rK,method:"DOWNLOAD_WALLPAPER",params:r,transParameters:!0})}rJ.rule=rK;var rq={target:[{os:"*"}],map:"app.getStoreItem"};function rQ(r){return u.call({rule:rq,method:"GET_STORE_ITEM",params:r,transParameters:!0})}rQ.rule=rq;var r0={target:[{os:"*"}],map:"app.setStoreItem"};function r1(r){return u.call({rule:r0,method:"SET_STORE_ITEM",params:r,transParameters:!0})}r1.rule=r0;var r2={target:[{os:"*"}],map:"app.getMetrics"};function r3(){return u.call({rule:r2,method:"GET_METRICS"})}r3.rule=r2;var r6={target:[{os:"*"}],map:"app.printFirstFeedShow"};function r5(r){return u.call({rule:r6,method:"printFirstFeedShow",params:r,transParameters:!0})}r5.rule=r6;var r4={target:[{os:"windows"}],map:"app.getHardwareDecodeState"};function r9(){return u.call({rule:r4,method:"getHardwareDecodeState"})}r9.rule=r4;var r7={target:[{os:"*"}],map:"app.isTopWebview"};function r8(){return u.call({rule:r7,method:"isTopWebview"})}r8.rule=r7;var er={target:[{os:"*"}],map:"app.getVolumeInfo"};function ee(){return u.call({rule:er,method:"getVolumeInfo"})}ee.rule=er;var et={target:[{os:"*"}],map:"app.openInternalBrowser"};function ei(r){return u.call({rule:et,method:"openInternalBrowser",params:r,transParameters:!0})}ei.rule=et;var en={target:[{os:"*"}],map:"app.mainWindowShowView"};function ea(){return u.call({rule:en,method:"mainWindowShowView"})}ea.rule=en;var eo={target:[{os:"*"}],map:"app.showErrorPage"};function es(){return u.call({rule:eo,method:"showErrorPage"})}es.rule=eo;var ec={target:[{os:"*"}],map:"app.getMonitorInfo"};function el(){return u.call({rule:ec,method:"getMonitorInfo"})}el.rule=ec;var eu={target:[{os:"*"}],map:"app.openDriverCheckWindow"};function ep(){return u.call({rule:eu,method:"openDriverCheckWindow"})}ep.rule=eu;var eh={target:[{os:"*"}],map:"app.checkDriver"};function ed(){return u.call({rule:eh,method:"checkDriver"})}ed.rule=eh;var ef={getVersion:d,setAlwaysOnTop:G,changeToOriginalMode:m,changeToSmallMode:v,isAlwaysOnTop:y,mainWindowMoveTop:I,minimize:w,handlePageReady:E,maximize:k,canGoBack:x,clearCookie:M,getWid:A,closeParent:U,closeWindow:j,getAllClientLog:W,getAppConfigItem:F,goBack:B,getPageStore:z,getSettings:Y,isFull:J,openWallpaperWindow:Q,getChannelId:re,reload:ri,setFullScreenable:ra,getAllWindowData:rs,reloadWindowFromId:rl,reportStat:rp,setAppConfigItem:rd,setAutoStart:rG,setCloseToTray:rm,setMiniMizeToTray:rv,showAbout:ry,syncLoginState:rI,themeChange:rw,getAllDisplays:rE,getPrimaryDisplay:rk,navigationGoBack:rx,getAutoStart:rM,showUpdateModal:rA,getIsUpdatePackageReady:rU,getClientUpdateInfo:rj,quitUpdateTip:rW,getMediaAccessStatus:rF,askForMediaAccess:rB,getIsMas:rz,getIsFrontShow:rY,downloadWallpaper:rJ,getStoreItem:rQ,setStoreItem:r1,getMetrics:r3,printFirstFeedShow:r5,getHardwareDecodeState:r9,isTopWebview:r8,getVolumeInfo:ee,openInternalBrowser:ei,mainWindowShowView:ea,showErrorPage:es,getMonitorInfo:el,openDriverCheckWindow:ep,checkDriver:ed};p(ef);var eG={target:[{os:"*"}],map:"user.getUserUniqueId"};function eg(){return u.call({rule:eG,method:"GET_USER_UNIQUE_ID"})}eg.rule=eG;var em={target:[{os:"*"}],map:"user.getCsrInitialData"};function eD(){return u.call({rule:em,method:"getCsrInitialData"})}eD.rule=em;var ev={getUserUniqueId:eg,getCsrInitialData:eD};return p(ev),{app:ef,user:ev,util:{canIUse:u.canIUse.bind(u),isClient:u.checkInClient,sdkVersion:"0.1.10"},on:u.on.bind(u),off:u.off.bind(u)}},r.exports=t()},673035:function(r,e,t){"use strict";t.d(e,{Z:function(){return n}});let i=`Arc(TM) A770M Graphics|995
+Arc(TM) A770 Graphics|983
+Arc(TM) A770 Graphics|969
+Arc(TM) A580 Graphics|944
+Arc(TM) A730M Graphics|822
+Arc(TM) A750 Graphics|768
+Arc(TM) A750 Graphics|768
+Arc(TM) A550M Graphics|660
+Arc(TM) A550M Graphics|634
+Xe Graphics ReleaseInternal|561
+Arc(TM) A770M Graphics|498
+Arc(TM) A380 Graphics|473
+Arc(TM) A380 Graphics|468
+Arc(TM) A370M Graphics|342
+Arc(TM) A370M Graphics|341
+Xe Graphics|319
+HD Graphics 630 GT2|309
+Arc(TM) A350M Graphics|284
+Iris(R) Xe MAX Graphics|214
+Iris(R) Xe Graphics RI|205
+Iris(R) Xe Graphics ReleaseInternal|181
+Iris(R) Xe Graphics|180
+Gen12 Desktop Graphics Controller|179
+Iris(R) Xe Graphics|178
+Iris(R) Xe MAX Graphics|168
+Corporation Iris Xe Graphics|167
+Corporation TigerLake-LP GT2 [Iris Xe Graphics]|162
+Xe Graphics|158
+Arc(TM) A350M Graphics|156
+Corporation TigerLake GT2 [Iris Xe Graphics]|149
+UHD Graphics 770|138
+UHD Graphics ReleaseInternal|137
+Iris(R) Pro Graphics P580|137
+Iris(R) Plus Graphics|132
+Iris Plus Graphics|127
+Iris(R) Pro Graphics 580|126
+UHD Graphics 770|125
+UHD Graphics 750|125
+Radeong 0.4 on AMD TONGA (DRM 3.1.0, LLVM 3.9.0)|123
+Corporation Iris Plus Graphics G7|123
+Iris(R) Plus Graphics|122
+Iris(R) Plus Graphics 940|121
+Iris(R) Plus Graphics 650|121
+Iris(R) Plus Graphics 655|121
+Iris(R) Plus Graphics 655|121
+HD Graphics P4600|120
+Iris(TM) Pro Graphics 6200|120
+Iris(R) Plus Graphics|118
+Iris(R) Plus Graphics 650|116
+Iris(R) Plus Graphics 655|115
+Iris(R) Pro Graphics 580|114
+Corporation Iris Pro Graphics 580|114
+Iris(R) Plus Graphics 645|113
+Iris(TM) Pro Graphics 6200|113
+Iris(TM) Pro Graphics P580|113
+Corporation Iris Plus Graphics 655|112
+Arc(TM) Graphics RI|111
+Iris(R) Plus Graphics 655|111
+Iris(R) Plus Graphics 655|110
+Iris(R) Plus Graphics|110
+UHD Graphics|110
+Iris Plus Graphics 655|108
+Iris(R) Plus Graphics 650|108
+Iris(R) Plus Graphics 650|108
+Iris(TM) Pro Graphics 580|108
+Iris(TM) Pro Graphics 6200|107
+Iris Graphics 6100|107
+Iris(TM) Pro Graphics 6200|107
+Iris(R) Plus Graphics 645|106
+UHD Graphics 730|106
+Iris(TM) Pro Graphics 6200|103
+Iris Pro Graphics 580|102
+Corporation Iris Pro Graphics 6200|102
+Iris(R) Plus Graphics gfx-driver-user-comp_media-21486 DC ReleaseInternal|101
+Iris(R) Pro Graphics 580|101
+Iris Plus Graphics 645|101
+UHD Graphics 750|100
+Iris(TM) Pro Graphics 580|99
+Iris(TM) Graphics 550|99
+Iris(TM) Pro Graphics P6300|99
+Iris(R) Plus Graphics 650|99
+Iris(TM) Pro Graphics 5200|98
+Iris(R) Graphics 550|97
+Iris(R) Plus Graphics|97
+Iris(R) Plus Graphics 650|96
+Iris(R) Plus Graphics 655|96
+Iris(R) Graphics 550|96
+Iris(R) Plus Graphics 645|95
+Iris Plus Graphics 650|95
+Iris(R) Graphics 550|95
+Iris Graphics 550|93
+Iris(R) Plus Graphics 650|93
+Iris(R) Pro Graphics 580|93
+Iris(TM) Plus Graphics 650|91
+Iris(TM) Graphics 550|91
+Iris(R) Plus Graphics 640|89
+Iris(TM) Plus Graphics 650|88
+Iris(TM) Pro Graphics P6300|88
+Iris(TM) Plus Graphics 650|88
+Iris(TM) Graphics 550|87
+UHD Graphics 730|87
+Corporation Iris Plus Graphics 650|87
+Iris(TM) Pro Graphics 5200|86
+Corporation CometLake-H GT2 [UHD Graphics]|86
+Iris(R) Graphics 540|86
+UHD Graphics P630|86
+UHD Graphics 630|85
+Iris(TM) Graphics 540|85
+Iris(TM) Plus Graphics 640|84
+Iris(TM) Graphics 540|84
+UHD Graphics 630|84
+UHD Graphics 630|83
+UHD Graphics P630|83
+Iris(TM) Plus Graphics 640|83
+UHD Graphics 630|83
+UHD Graphics 630|83
+Iris Plus Graphics 640|83
+Iris(TM) Graphics 540|82
+UHD Graphics 630|82
+UHD Graphics 630|82
+Iris(TM) Pro Graphics 5200|81
+UHD Graphics 630|81
+HD Graphics 630|81
+UHD Graphics 630|81
+UHD Graphics 630|81
+UHD Graphics 630|80
+UHD Graphics 630|80
+UHD Graphics 630|80
+Iris Pro Graphics 6200|80
+UHD Graphics 630|80
+Iris Graphics 540|80
+HD Graphics 630|80
+Iris(TM) Graphics 540|80
+Iris(TM) Pro Graphics 5200|79
+UHD Graphics 630|79
+UHD Graphics 630|79
+UHD Graphics 630|79
+Iris Graphics 540|79
+UHD Graphics 630|79
+UHD Graphics|78
+Corporation Sky Lake Integrated Graphics|78
+Iris(TM) Pro Graphics 6200|78
+Corporation WhiskeyLake-U GT2 [UHD Graphics 620]|78
+Radeong 0.4 on AMD BONAIRE (DRM 2.43.0, LLVM 3.8.0)|78
+UHD Graphics 710|78
+UHD Graphics 630|78
+UHD Graphics P630|77
+UHD Graphics 630|77
+UHD Graphics 630 (Desktop 9 Series)|77
+UHD Graphics 630|77
+Coffee Lake UHD Graphics|77
+Iris(TM) Pro Graphics 5200|77
+UHD Graphics 630|76
+Iris(R) Plus Graphics 640|76
+Iris(TM) Pro Graphics 5200|76
+UHD Graphics 630|76
+UHD Graphics|76
+UHD Graphics 630|76
+Iris(TM) Pro Graphics 5200|75
+UHD Graphics 630|75
+UHD Graphics P630|75
+HD Graphics P530|75
+HD Graphics 630|75
+Iris(TM) Pro Graphics 5200|75
+UHD Graphics 630|75
+Iris(TM) Pro Graphics 5200|75
+HD Graphics 620|74
+UHD Graphics 630|74
+HD Graphics 630|74
+HD Graphics 630|74
+Coffee Lake HD Graphics|74
+UHD Graphics 630|74
+Iris(TM) Graphics 540|74
+UHD 630|74
+Iris(R) Graphics 540|73
+UHD Graphics 620|73
+Iris Graphics 6200|73
+Corporation CoffeeLake-H GT2 [UHD Graphics 630]|73
+UHD Graphics 630 (Desktop)|73
+HD Graphics ICL RVP|73
+UHD Graphics 630|73
+HD Graphics 630|72
+Iris Pro|72
+KBL Unknown|72
+UHD Graphics 630|72
+Iris(TM) Pro Graphics 5200|72
+HD Graphics 530|72
+Corporation UHD Graphics 630 (Desktop 9 Series)|72
+Radeon Pro Vega 16|72
+Iris(TM) Graphics 540|72
+Iris(R) Graphics 540|72
+UHD Graphics 630|71
+HD Graphics 630|71
+Iris(TM) Pro Graphics 5200|71
+UHD Graphics 630|71
+Iris Pro|71
+CometLake UHD Graphics 630|71
+HD Graphics 630|71
+UHD Graphics|71
+Iris(TM) Plus Graphics 640|71
+UHD Graphics|71
+Corporation UHD Graphics|70
+Iris Pro Graphics 6200|70
+Iris(R) Graphics 540|70
+Graphics|70
+UHD Graphics 630|70
+HD Graphics ICL RVP BigSur|70
+UHD Graphics ReleaseInternal|70
+HD Graphics 530|70
+UHD Graphics 630|70
+UHD Graphics|70
+UHD Graphics gfx-driver-user-comp_core-23599|70
+UHD Graphics 630|69
+UHD Graphics|69
+Iris(TM) Pro Graphics 5200|69
+Corporation Iris Plus Graphics G1 (Ice Lake)|69
+HD Graphics 630|69
+HD Graphics 630|69
+Iris(R) Plus Graphics|69
+Iris(TM) Pro Graphics 5200|69
+UHD Graphics 620|69
+UHD Graphics|69
+Iris(R) Plus Graphics 640|69
+Iris Pro Graphics 6200|69
+HD Graphics 630|69
+UHD Graphics 630 (Mobile)|68
+Iris(TM) Pro Graphics 5200|68
+Corporation UHD Graphics 630 (Desktop)|68
+HD Graphics 630|68
+UHD Graphics 630|68
+UHD Graphics 620|68
+UHD Graphics 630|68
+Iris(TM) Plus Graphics 640|68
+UHD Graphics|67
+Iris Pro Graphics 580|67
+Iris(TM) Graphics 540|67
+UHD Graphics 620|67
+Iris(TM) Pro Graphics 5200|67
+UHD Graphics|66
+HD Graphics P530|66
+Corporation UHD Graphics 630 (Mobile)|66
+Iris(R) Plus Graphics 640|66
+UHD Graphics 630|66
+Iris(R) Plus Graphics 640|65
+HD Graphics 630|65
+HD 530|65
+UHD Graphics 620|65
+SKL Unknown|65
+HD Graphics 630|64
+Iris(TM) Graphics 540|64
+Mesa DRI Intel(R) UHD Graphics 620 (Kabylake GT2)|64
+UHD Graphics 630|64
+HD Graphics 530|63
+HD Graphics 530|63
+HD Graphics 530|63
+Mesa Intel(R) HD Graphics 530 (SKL GT2)|63
+UHD Graphics|63
+HD Graphics 530|63
+Iris Graphics 550|63
+HD Graphics 530|63
+Iris Plus Graphics 655|63
+HD Graphics 630|63
+UHD Graphics, Gen11 LP|63
+Corporation 8th Gen Core Processor Gaussian Mixture Model|63
+UHD Graphics 630|63
+Iris(TM) Graphics 650|63
+Iris(R) Plus Graphics 640|62
+HD Graphics 530|62
+Mesa DRI Intel(R) Iris Graphics 540 (Skylake GT3e)|62
+Iris(R) Plus Graphics|61
+Iris(TM) Pro Graphics 5200|61
+Iris Pro|61
+HD Graphics 620|61
+UHD Graphics 620|61
+UHD Graphics 630|61
+UHD Graphics|61
+HD Graphics 530|60
+Iris Plus Graphics G1|60
+Iris(TM) Pro Graphics 5200|60
+Iris Plus Graphics 650|60
+UHD Graphics|60
+HD Graphics 620|60
+UHD Graphics 620|60
+UHD Graphics 630|60
+Mesa DRI Intel(R) HD Graphics 630 (Kaby Lake GT2)|60
+UHD Graphics 620|60
+HD Graphics 630|60
+HD Graphics 630|59
+Iris Graphics 540|59
+Iris Plus Graphics 640|59
+CoffeeLake-H GT2 [UHD Graphics 630]|59
+HD Graphics 630|59
+UHD Graphics|59
+HD Graphics 620|59
+UHD Graphics 620|59
+HD Graphics 630|59
+Corporation UHD Graphics 620 (Whiskey Lake)|59
+Iris(R) Plus Graphics 650|59
+UHD Graphics 620|59
+Mesa Intel(R) HD Graphics 520 (SKL GT2)|58
+HD Graphics 630|58
+HD Graphics P530|58
+Iris(TM) Plus Graphics 640|58
+Corporation HD Graphics 630|58
+UHD Graphics 620|58
+UHD Graphics 630|58
+HD Graphics P630|58
+Mesa DRI Intel(R) UHD Graphics 630 (Coffeelake 3x8 GT2)|58
+Corporation CometLake-S GT2 [UHD Graphics 630]|58
+HD Graphics 530|58
+Iris Graphics 540|58
+HD Graphics 530|58
+Corporation Device|58
+HD Graphics CFL CRB|57
+HD Graphics 620 macOS Edition|57
+HD Graphics 530|57
+Mesa DRI Intel(R) HD Graphics 520 (SKL GT2)|57
+Iris Pro Graphics|56
+Iris(TM) Pro Graphics 5200|56
+Iris(R) Plus Graphics 655|56
+Coffee Lake UHD Graphics|56
+Iris(TM) Graphics 640|55
+Iris Pro|55
+UHD Graphics 630|55
+UHD Graphics 620|55
+HD Graphics 530|55
+HD Graphics 520|54
+HD Graphics 530|54
+UHD Graphics 620|54
+HD Graphics 530|54
+Corporation UHD Graphics 620|54
+UHD Graphics|54
+Iris Plus Graphics G7|54
+Corporation Skylake GT2 [HD Graphics 520]|53
+UHD Graphics 630|53
+HD Graphics 630|53
+Corporation HD Graphics 530|53
+UHD Graphics 617|53
+HD Graphics 520|52
+HD Graphics 620|52
+HD Graphics 620|52
+HD Graphics 620|52
+HD Graphics 620|52
+HD Graphics 630|52
+HD Graphics 630|52
+HD Graphics 5600|51
+HD Graphics 530|51
+HD Graphics 630|51
+UHD Graphics 615|51
+Mesa DRI Intel(R) HD Graphics 520 (Skylake GT2)|51
+HD Graphics 630|50
+HD Graphics 620|50
+UHD Graphics|50
+HD Graphics P4600/P4700|50
+HD Graphics 520|50
+HD Graphics 530|50
+HD Graphics 620|50
+HD Graphics 530|50
+Corporation HD Graphics 620|50
+HD Graphics 530|50
+UHD Graphics 620|49
+UHD Graphics 620|49
+HD Graphics 530|49
+Iris(TM) Graphics 6100|49
+HD Graphics 4600|49
+HD Graphics 630|49
+UHD Graphics 617|49
+UHD Graphics RI|48
+HD Graphics 520|48
+UHD Graphics 617|48
+HD Graphics 5600|48
+HD Graphics 620|48
+UHD Graphics, Gen11 LP|47
+UHD Graphics 617|47
+Mesa DRI Intel(R) HD Graphics 620 (Kaby Lake GT2)|47
+HD Graphics 615|47
+UHD Graphics RI|47
+HD Graphics 630|47
+HD Graphics 4600|46
+HD Graphics 520|46
+Corporation Skylake GT2 [HD Graphics 520]|46
+HD Graphics 520|46
+Corporation Device|46
+HD Graphics 4600|46
+HD Graphics 615|45
+HD Graphics 4600|45
+Iris(TM) Graphics 6100|45
+HD Graphics 615|45
+UHD Graphics 615|45
+HD Graphics 630 GT2|45
+HD Graphics 4600|45
+HD Graphics 630|45
+Iris(TM) Graphics 6100|45
+HD Graphics 4600|45
+HD Graphics 620|45
+Iris(TM) Graphics 6100|45
+HD Graphics 520|45
+HD Graphics 4600|45
+Iris(TM) Graphics 540|44
+HD Graphics 530|44
+HD Graphics 4600|44
+Iris(TM) Graphics 5100|44
+Kabylake HD Graphics ULT GT2|44
+Iris Graphics 6100|44
+UHD Graphics 630|44
+HD Graphics 520|44
+HD Graphics KBL CRB|44
+HD Graphics 530 (Skylake GT2)|44
+Corporation HD Graphics 620|44
+HD Graphics 515|44
+UHD Graphics|44
+UHD Graphics 620|44
+Iris(TM) Pro Graphics P580|43
+UHD Graphics 615|43
+HD Graphics 4600|43
+HD Graphics 4600|43
+Corporation Skylake Integrated Graphics|43
+HD Graphics 530|43
+UHD Graphics 615|43
+UHD Graphics 630|43
+HD Graphics 615|42
+HD Graphics 620|42
+HD Graphics 4600|42
+HD Graphics 615|42
+HD Graphics 4600|42
+HD Graphics 4600|42
+Mesa DRI Intel(R) Kabylake GT2|42
+HD Graphics 620|42
+Corporation HD Graphics 6000|42
+UHD Graphics 615|42
+HD Graphics 4600|41
+Corporation HD Graphics 520|41
+HD Graphics P4600/P4700|41
+Corporation, Series Chipset Iris Plus Graphics 655|41
+HD Graphics 4600|41
+Mesa DRI Intel(R) HD Graphics 530 (Skylake GT2)|41
+HD Graphics 4600|41
+Iris(TM) Graphics 640|41
+HD Graphics 4600|41
+HD Graphics 630|40
+Iris(TM) Graphics 5100|40
+Iris(TM) Graphics 6100|40
+UHD Graphics 610|40
+HD Graphics 4600|40
+HD Graphics 4600|40
+UHD Graphics 615|40
+UHD Graphics 610|40
+HD Graphics 530|40
+UHD Graphics 605|40
+HD Graphics 615|40
+HD Graphics 4600|40
+UHD Graphics 615|40
+HD Graphics 505|39
+PHDGD Ivy 4|39
+Unknown|39
+Iris(TM) Graphics 5100|39
+Iris|39
+Corporation Iris Graphics 6100|39
+HD Graphics 6000|39
+Iris(TM) Graphics 5100|39
+HD Graphics 615|39
+HD Graphics 5500|39
+Skylake GT2 [HD Graphics 520]|39
+Corporation Broadwell-U Integrated Graphics|38
+HD Graphics 615|38
+HD Graphics 5500|38
+HD Graphics 4600|38
+Mesa DRI Intel(R) HD Graphics P4000 (IVB GT2)|38
+HD Graphics 4600|38
+HD Graphics 615|38
+Corporation HD Graphics 610|38
+HD Graphics 4600|38
+HD Graphics 4600|38
+Iris(TM) Graphics 5100|38
+Iris Graphics 6100|38
+HD Graphics 515|38
+HD Graphics 6000|38
+UHD Graphics, Gen11 LP|38
+Iris(TM) Graphics 5100|38
+HD Graphics 4600|37
+HD Graphics 610|37
+HD Graphics 4600|37
+HD Graphics 515|37
+HD Graphics 4600|37
+HD Graphics 4600|37
+Iris Graphics P580|37
+Iris(TM) Pro Graphics P6300|37
+HD Graphics 5500|37
+HD Graphics 4600|37
+Iris Graphics 6100|37
+UHD Graphics 610|37
+HD Graphics 4600|37
+HD Graphics 4600|37
+UHD Graphics 610|37
+HD Graphics 530|37
+HD Graphics 5500|37
+HD Graphics 515|36
+HD Graphics P4600/P4700|36
+HD Graphics 515|36
+HD Graphics 4600|36
+UHD Graphics 615|36
+Iris Graphics 6100|36
+HD Graphics 4600|36
+HD Graphics 4600|36
+HD Graphics 4600|36
+HD Graphics 520|36
+HD Graphics 520|36
+HD Graphics 5500|36
+Corporation HD Graphics 5500|35
+Iris|35
+HD5500 Graphics PG7|35
+HD Graphics 515|35
+Iris|35
+Graphics gfx-driver-user-feature_dg1_poweron-27723 DCH ReleaseInternal|35
+HD Graphics 615|35
+HD Graphics P630|35
+HD Graphics 510|35
+HD Graphics 6000|35
+HD Graphics 5000|35
+Corporation HD Graphics 5300|35
+HD Graphics 6000|35
+HD Graphics 4600|35
+HD5500 Broadwell PG7|35
+Graphics HD 4600|35
+HD Graphics 6000|35
+HD Graphics 510|34
+HD Graphics 610|34
+HD Graphics 4600|34
+HD Graphics Family (PHDGD Skylake v2.9)|34
+Corporation Device|34
+HD Graphics 610|34
+UHD Graphics 610|34
+HD Graphics 5300|34
+HD Graphics 5000|34
+HD Graphics 4600|34
+UHD Graphics 610|33
+HD Graphics 4600|33
+UHD Graphics 620|33
+Corporation UHD Graphics 615|33
+HD Graphics 5000|33
+Kabylake HD Graphics ULX GT2|33
+HD Graphics 620|33
+UHD Graphics 615|33
+HD Graphics 4600|33
+HD Graphics 5500|33
+HD Graphics 515|33
+UHD Graphics|33
+HD Graphics 4600|33
+HD Graphics 520|33
+HD Graphics 6000|33
+HD Graphics 615|33
+HD Graphics KBL CRB|33
+HD Graphics 4600|33
+UHD Graphics 610|33
+Iris Graphics 6100|33
+HD Graphics 515|33
+Iris|32
+Iris|32
+HD Graphics 5000|32
+Iris|32
+HD Graphics 5000|32
+Iris(TM) Graphics 5100|32
+HD Graphics 4600|32
+HD Graphics 4600|32
+Corporation Xeon E3-1200 v3/4th Gen Core Processor Integrated Graphics Controller|32
+HD Graphics 5500 (PHDGD Skylake v2.9)|32
+HD Graphics 610|32
+HD Graphics 6000|31
+HD Graphics 5500|31
+Iris|31
+HD Graphics 6000|31
+UHD Graphics 610|31
+HD Graphics 510|31
+HD Graphics|31
+HD Graphics 6000|31
+HD Graphics 4400|31
+HD Graphics 5000|31
+HD Graphics 4600|30
+HD Graphics 515|30
+HD Graphics 5600|30
+HD Graphics 4600|30
+HD Graphics 4400|30
+HD Graphics 530|30
+GeForce GTX 960|30
+UHD Graphics 610|30
+GeForce GTX 960|30
+HD Graphics 510|30
+HD Graphics 6000|30
+Corporation HD Graphics 515|30
+HD Graphics 610|29
+HD Graphics 510|29
+HD Graphics 5000|29
+HD Graphics 4600|29
+Iris(TM) Pro Graphics 6200|29
+HD Graphics 510|29
+HD Graphics 5000|29
+HD Graphics 6000|29
+Iris|29
+HD Graphics 4400|29
+HD Graphics 4400|29
+HD Graphics 4000|29
+HD Graphics 510|29
+HD Graphics 5000|29
+HD Graphics 4400|28
+HD Graphics 610|28
+HD Graphics 5300|28
+HD Graphics 510|28
+HD Graphics|28
+HD Graphics 610|28
+HD Graphics 4400|28
+HD Graphics 610|28
+HD Graphics 4600|28
+HD Graphics 4600|28
+HD Graphics 5000|28
+HD Graphics 4400|28
+HD Graphics 4400|28
+Corporation Xeon E3-1200 v3/4th Gen Core Processor Integrated Graphics Controller|28
+HD Graphics 4400|28
+HD Graphics 5300|28
+HD Graphics 5000|28
+UHD Graphics 605|28
+HD Graphics 4400|28
+HD Graphics 5500|28
+HD Graphics 4000|28
+HD Graphics 4400|27
+HD Graphics 615|27
+HD Graphics Family(PHDGD Skylake v2.0)|27
+HD Graphics 4400|27
+HD Graphics 4400|27
+HD Graphics 610|27
+Corporation HD Graphics 510|27
+Iris|27
+HD Graphics 520|27
+HD Graphics 5000|27
+HD Graphics 5300|27
+HD Graphics 6000|27
+HD Graphics 4000|27
+HD Graphics 610|27
+HD Graphics 5000|27
+HD Graphics 4600|27
+Mesa DRI Intel(R) HD Graphics 505 (Broxton)|27
+HD Graphics 5500|27
+HD Graphics|27
+HD Graphics 5000|26
+UHD Graphics 600|26
+HD Graphics 4600|26
+Mesa DRI Intel(R) Haswell Mobile|26
+HD Graphics 4000|26
+HD Graphics 5300|26
+Iris(TM) Graphics 540|26
+HD Graphics 4000|26
+HD Graphics 4600|26
+HD Graphics|26
+HD Graphics 4400|26
+HD Graphics 4600|26
+HD Graphics 6000|26
+Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Integrated Graphics Controller|26
+HD Graphics 530|26
+HD Graphics 5500|25
+Broxton-P HD Graphics|25
+Corporation Xeon E3-1200 v3/4th Gen Core Processor Integrated Graphics Controller|25
+HD 4000|25
+HD Graphics 4400|25
+HD Graphics 4600|25
+HD Graphics 5500|25
+HD 4000|25
+Corporation Xeon E3-1200 v3/4th Gen Core Processor Integrated Graphics Controller|25
+Corporation HD Graphics|25
+HD Graphics 4400|25
+Mesa DRI Intel(R) HD Graphics 5500 (Broadwell GT2)|25
+HD Graphics 4400|25
+HD Graphics|25
+UHD Graphics 600|24
+Arc(TM) Graphics|24
+HD Graphics 4600|24
+HD Graphics 5300|24
+HD Graphics 4400|24
+HD Graphics 4400|24
+HD Graphics 4400|24
+HD Graphics 4000|24
+UHD Graphics 605|24
+HD Graphics 5000|23
+Corporation Xeon E3-1200 v2/3rd Gen Core processor Graphics Controller|23
+UHD Graphics, LKF|23
+UHD Graphics 605|23
+HD Graphics 4400|23
+HD Graphics 4400|23
+HD Graphics 4000|23
+HD Graphics 4400|23
+Mesa DRI Intel(R) Ivybridge Desktop|23
+0x496e74656c2048442047726170686963000732034343|23
+HD Graphics 5300|22
+HD Graphics 615|22
+Kabylake HD Graphics ULX GT2|22
+HD Graphics 5300|22
+HD Graphics|22
+HD Graphics|22
+HD Graphics 4000|22
+HD Graphics|22
+HD Graphics 515|22
+HD Graphics|22
+HD Graphics 5300|22
+Corporation Xeon E3-1200 v3/4th Gen Core Processor Integrated Graphics Controller|22
+HD Graphics 5300|22
+Corporation Xeon E3-1200 v3/4th Gen Core Processor Integrated Graphics Controller|22
+HD Graphics 4000|21
+UHD Graphics 605|21
+Corporation Xeon E3-1200 v3/4th Gen Core Processor Integrated Graphics Controller|21
+HD Graphics 4400|21
+HD Graphics|21
+HD Graphics 4400|21
+Corporation Xeon E3-1200 v3/4th Gen Core Processor Integrated Graphics Controller|21
+HD Graphics|21
+HD Graphics 5300|21
+HD Graphics 4400|21
+HD Graphics 5300|21
+HD Graphics P4600/P4700|21
+HD Graphics|21
+Corporation Xeon E3-1200 v3/4th Gen Core Processor Integrated Graphics Controller|21
+Corporation UHD Graphics 605|20
+UHD Graphics 600|20
+HD Graphics 4000|20
+HD Graphics|20
+UHD Graphics 600 Universal|20
+HD Graphics 4600|20
+HD Graphics 500|20
+UHD Graphics 600|20
+HD Graphics|20
+HD Graphics 5000|20
+HD Graphics 4400|20
+HD Graphics 5300|19
+HD Graphics 4000|19
+Mesa DRI Intel(R) Sandybridge Mobile|19
+HD Graphics 505|19
+HD Graphics 4000|19
+HD Graphics 4400|19
+UHD Graphics 600|19
+HD Graphics 3000|19
+HD Graphics 615|19
+HD Graphics|19
+Corporation Atom/Celeron/Pentium Processor N4200/N3350/E3900 Series Integrated Graphics Controller|19
+HD Graphics 4000|19
+HD Graphics|19
+UHD Graphics 600|19
+HD Graphics|19
+Corporation Haswell-ULT Integrated Graphics Controller|19
+HD Graphics 4400|19
+Corporation GeminiLake [UHD Graphics 600]|19
+HD Graphics 4000|18
+HD Graphics|18
+HD Graphics|18
+HD Graphics 500|18
+HD Graphics 4000|18
+CherryView HD Graphics|17
+Corporation Xeon E3-1200 v2/3rd Gen Core processor Graphics Controller|17
+Xeon E3-1200 v3/4th Gen Core Processor Integrated Graphics Controller|17
+Corporation Xeon E3-1200 v3/4th Gen Core Processor Integrated Graphics Controller|17
+UHD Graphics 600|17
+UHD Graphics 600|17
+Corporation Xeon E3-1200 v2/3rd Gen Core processor Graphics Controller|16
+HD Graphics|16
+UHD Graphics 600|16
+HD Graphics|16
+HD Graphics 5000 (Android)|16
+HD Graphics|16
+UHD Graphics 600|16
+HD Graphics|16
+HD Graphics, Gen10|16
+HD Graphics (PHDGD IvyDrive 3.0)|16
+HD Graphics|15
+UHD Graphics 600|15
+Corporation Atom/Celeron/Pentium Processor x5-E8000/J3xxx/N3xxx Integrated Graphics Controller|15
+HD Graphics 500|15
+HD Graphics 505|15
+HD Graphics|15
+Corporation 3rd Gen Core processor Graphics Controller|15
+HD Graphics 4400|15
+HD Graphics|14
+HD Graphics|14
+HD Graphics|14
+HD Graphics 505|14
+HD Graphics|14
+HD Graphics|14
+HD Graphics|14
+HD Graphics|13
+HD Graphics 530|13
+HD Graphics 500|13
+Corporation 3rd Gen Core processor Graphics Controller|13
+HD Graphics 4400|12
+HD Graphics 5500|12
+HD Graphics|12
+HD Graphics|12
+Corporation HD Graphics 500|12
+HD Graphics 500|12
+3rd Gen Core processor Graphics Controller|12
+HD Graphics|11
+Corporation Atom/Celeron/Pentium Processor x5-E8000/J3xxx/N3xxx Series PCI Configuration Registers|11
+Corporation 2nd Gen Core Processor Family Integrated Graphics Controller|11
+HD Graphics 510|11
+HD Graphics 4600 (PHDGD Skylake v2.9)|9
+Corporation Atom Processor Z36xxx/Z37xxx Series Graphics & Display|8
+Corporation Atom Processor Z36xxx/Z37xxx Series Graphics & Display|8
+Mesa DRI Intel(R) Bay Trail|8
+UHD Graphics, Gen12 LP ReleaseInternal|5
+Corporation D3D12 (Intel(R) UHD Graphics 630)|3
+HD Graphics 3000|2
+(PE64) Intel(R) 4th Generation Haswell HD Graphics Family|-1
+4 Series Internal Chipset|-1
+7 Series/C216 Chipset Family MEI Controller #1|-1
+B43 Express Chipset|-1
+CometLake-S GT2 [UHD Graphics 630]|-1
+HD Graphics 5500|-1
+HD Graphics 620|-1
+G35 Express Chipset Family|-1
+G41 Express Chipset|-1
+G45/G43 Express Chipset|-1
+Graphics Media Accelerator HD|-1
+HD Graphics (PHDGD Omega 5.0)|-1
+HD Graphics 4400|-1
+HD Graphics P3000|-1
+HD Graphics P3000 (PHDGD Omega 5.0)|-1
+IncrediblE HD Graphics 3000|-1
+Iris Pro Graphics 5200|-1
+Mesa DRI Intel(R) HD Graphics (CHV)|-1
+Mesa DRI Intel(R) Ivybridge Mobile|-1
+Mobile Intel(R) 4 Series Express Chipset Family|-1
+Mobile Intel(R) 965 Express Chipset Family|-1
+Mobile Intel(R) HD Graphics|-1
+PHDGD Quantic C3|-1
+Q45/Q43 Express Chipset|-1
+Radeong 0.4 on AMD CAPE VERDE (DRM 2.43.0, LLVM 3.7.0)|-1
+Radeong 0.4 on AMD CAPE VERDE (DRM 3.9.0 / 4.9.0-rc1+, LLVM 4.0.0)|-1
+Radeong 0.4 on AMD FIJI (DRM 3.2.0 / 4.7.0-rc5+, LLVM 4.0.0)|-1
+UHD Graphics, Gen12 LP ReleaseInternal|-1`;function n(){return i}},205464:function(r,e,t){"use strict";t(303677)},211284:function(r,e,t){"use strict";t.d(e,{Fo:function(){return d},U2:function(){return c},is:function(){return I},nB:function(){return H},qw:function(){return u}});var i=t(88648),n=t(209021),a=t(190087);function o(r,e,t){let i=r.slice();return i.splice(t<0?i.length+t:t,0,i.splice(e,1)[0]),i}function s(r){return null!==r&&r>=0}let c=r=>{let{rects:e,activeIndex:t,overIndex:i,index:n}=r,a=o(e,i,t),s=e[n],c=a[n];return c&&s?{x:c.left-s.left,y:c.top-s.top,scaleX:c.width/s.width,scaleY:c.height/s.height}:null},l={scaleX:1,scaleY:1},u=r=>{var e;let{activeIndex:t,activeNodeRect:i,index:n,rects:a,overIndex:o}=r,s=null!=(e=a[t])?e:i;if(!s)return null;if(n===t){let r=a[o];return r?{x:0,y:t<o?r.top+r.height-(s.top+s.height):r.top-s.top,...l}:null}let c=function(r,e,t){let i=r[e],n=r[e-1],a=r[e+1];return i?t<e?n?i.top-(n.top+n.height):a?a.top-(i.top+i.height):0:a?a.top-(i.top+i.height):n?i.top-(n.top+n.height):0:0}(a,n,t);return n>t&&n<=o?{x:0,y:-s.height-c,...l}:n<t&&n>=o?{x:0,y:s.height+c,...l}:{x:0,y:0,...l}},p="Sortable",h=i.createContext({activeIndex:-1,containerId:p,disableTransforms:!1,items:[],overIndex:-1,useDragOverlay:!1,sortedRects:[],strategy:c,disabled:{draggable:!1,droppable:!1}});function d(r){var e;let{children:t,id:o,items:s,strategy:l=c,disabled:u=!1}=r,{active:d,dragOverlay:f,droppableRects:G,over:g,measureDroppableContainers:m}=(0,n.Cj)(),D=(0,a.Ld)(p,o),v=null!==f.rect,H=(0,i.useMemo)(()=>s.map(r=>"object"==typeof r&&"id"in r?r.id:r),[s]),y=null!=d,b=d?H.indexOf(d.id):-1,I=g?H.indexOf(g.id):-1,C=(0,i.useRef)(H),w=!function(r,e){if(r===e)return!0;if(r.length!==e.length)return!1;for(let t=0;t<r.length;t++)if(r[t]!==e[t])return!1;return!0}(H,C.current),P=-1!==I&&-1===b||w;let E="boolean"==typeof(e=u)?{draggable:e,droppable:e}:e;(0,a.LI)(()=>{w&&y&&m(H)},[w,H,y,m]),(0,i.useEffect)(()=>{C.current=H},[H]);let T=(0,i.useMemo)(()=>{var r,e;return{activeIndex:b,containerId:D,disabled:E,disableTransforms:P,items:H,overIndex:I,useDragOverlay:v,sortedRects:(r=H,e=G,r.reduce((r,t,i)=>{let n=e.get(t);return n&&(r[i]=n),r},Array(r.length))),strategy:l}},[b,D,E.draggable,E.droppable,P,H,I,G,v,l]);return i.createElement(h.Provider,{value:T},t)}let f=r=>{let{id:e,items:t,activeIndex:i,overIndex:n}=r;return o(t,i,n).indexOf(e)},G=r=>{let{containerId:e,isSorting:t,wasDragging:i,index:n,items:a,newIndex:o,previousItems:s,previousContainerId:c,transition:l}=r;return!!l&&!!i&&(s===a||n!==o)&&(!!t||o!==n&&e===c)},g={duration:200,easing:"ease"},m="transform",D=a.ux.Transition.toString({property:m,duration:0,easing:"linear"}),v={roleDescription:"sortable"};function H(r){let{animateLayoutChanges:e=G,attributes:t,disabled:o,data:c,getNewIndex:l=f,id:u,strategy:p,resizeObserverConfig:d,transition:H=g}=r,{items:y,containerId:b,activeIndex:I,disabled:C,disableTransforms:w,sortedRects:P,overIndex:E,useDragOverlay:T,strategy:k}=(0,i.useContext)(h),S=function(r,e){var t,i;return"boolean"==typeof r?{draggable:r,droppable:!1}:{draggable:null!=(t=null==r?void 0:r.draggable)?t:e.draggable,droppable:null!=(i=null==r?void 0:r.droppable)?i:e.droppable}}(o,C),x=y.indexOf(u),_=(0,i.useMemo)(()=>({sortable:{containerId:b,index:x,items:y},...c}),[b,c,x,y]),M=(0,i.useMemo)(()=>y.slice(y.indexOf(u)),[y,u]),{rect:R,node:A,isOver:O,setNodeRef:U}=(0,n.Zj)({id:u,data:_,disabled:S.droppable,resizeObserverConfig:{updateMeasurementsFor:M,...d}}),{active:L,activatorEvent:j,activeNodeRect:N,attributes:W,setNodeRef:V,listeners:F,isDragging:X,over:B,setActivatorNodeRef:Z,transform:z}=(0,n.O1)({id:u,data:_,attributes:{...v,...t},disabled:S.draggable}),$=(0,a.HB)(U,V),Y=!!L,K=Y&&!w&&s(I)&&s(E),J=!T&&X,q=J&&K?z:null,Q=K?null!=q?q:(null!=p?p:k)({rects:P,activeNodeRect:N,activeIndex:I,overIndex:E,index:x}):null,rr=s(I)&&s(E)?l({id:u,items:y,activeIndex:I,overIndex:E}):x,re=null==L?void 0:L.id,rt=(0,i.useRef)({activeId:re,items:y,newIndex:rr,containerId:b}),ri=y!==rt.current.items,rn=e({active:L,containerId:b,isDragging:X,isSorting:Y,id:u,index:x,items:y,newIndex:rt.current.newIndex,previousItems:rt.current.items,previousContainerId:rt.current.containerId,transition:H,wasDragging:null!=rt.current.activeId}),ra=function(r){let{disabled:e,index:t,node:o,rect:s}=r,[c,l]=(0,i.useState)(null),u=(0,i.useRef)(t);return(0,a.LI)(()=>{if(!e&&t!==u.current&&o.current){let r=s.current;if(r){let e=(0,n.VK)(o.current,{ignoreTransform:!0}),t={x:r.left-e.left,y:r.top-e.top,scaleX:r.width/e.width,scaleY:r.height/e.height};(t.x||t.y)&&l(t)}}t!==u.current&&(u.current=t)},[e,t,o,s]),(0,i.useEffect)(()=>{c&&l(null)},[c]),c}({disabled:!rn,index:x,node:A,rect:R});return(0,i.useEffect)(()=>{Y&&rt.current.newIndex!==rr&&(rt.current.newIndex=rr),b!==rt.current.containerId&&(rt.current.containerId=b),y!==rt.current.items&&(rt.current.items=y)},[Y,rr,b,y]),(0,i.useEffect)(()=>{if(re===rt.current.activeId)return;if(re&&!rt.current.activeId){rt.current.activeId=re;return}let r=setTimeout(()=>{rt.current.activeId=re},50);return()=>clearTimeout(r)},[re]),{active:L,activeIndex:I,attributes:W,data:_,rect:R,index:x,newIndex:rr,items:y,isOver:O,isSorting:Y,isDragging:X,listeners:F,node:A,overIndex:E,over:B,setNodeRef:$,setActivatorNodeRef:Z,setDroppableNodeRef:U,setDraggableNodeRef:V,transform:null!=ra?ra:Q,transition:function(){return ra||ri&&rt.current.newIndex===x?D:(!J||(0,a.vd)(j))&&H?Y||rn?a.ux.Transition.toString({...H,property:m}):void 0:void 0}()}}function y(r){if(!r)return!1;let e=r.data.current;return!!e&&"sortable"in e&&"object"==typeof e.sortable&&"containerId"in e.sortable&&"items"in e.sortable&&"index"in e.sortable||!1}let b=[n.g4.Down,n.g4.Right,n.g4.Up,n.g4.Left],I=(r,e)=>{let{context:{active:t,collisionRect:i,droppableRects:o,droppableContainers:s,over:c,scrollableAncestors:l}}=e;if(b.includes(r.code)){if(r.preventDefault(),!t||!i)return;let e=[];s.getEnabled().forEach(t=>{if(!t||null!=t&&t.disabled)return;let a=o.get(t.id);if(!!a)switch(r.code){case n.g4.Down:i.top<a.top&&e.push(t);break;case n.g4.Up:i.top>a.top&&e.push(t);break;case n.g4.Left:i.left>a.left&&e.push(t);break;case n.g4.Right:i.left<a.left&&e.push(t)}});let u=(0,n.ey)({active:t,collisionRect:i,droppableRects:o,droppableContainers:e,pointerCoordinates:null}),p=(0,n._8)(u,"id");if(p===(null==c?void 0:c.id)&&u.length>1&&(p=u[1].id),null!=p){let r=s.get(t.id),e=s.get(p),c=e?o.get(e.id):null,u=null==e?void 0:e.node.current;if(u&&c&&r&&e){let t=(0,n.hI)(u).some((r,e)=>l[e]!==r),o=C(r,e),s=function(r,e){return!!(y(r)&&y(e)&&C(r,e))&&r.data.current.sortable.index<e.data.current.sortable.index}(r,e),p=t||!o?{x:0,y:0}:{x:s?i.width-c.width:0,y:s?i.height-c.height:0},h={x:c.left,y:c.top};return p.x&&p.y?h:(0,a.$X)(h,p)}}}};function C(r,e){return!!(y(r)&&y(e))&&r.data.current.sortable.containerId===e.data.current.sortable.containerId}},590123:function(r,e,t){"use strict";t.d(e,{j:function(){return a}});var i=t(949496),n=t.n(i);let a=(r,e=[])=>{var t,i,a;let o="";for(let{param_name:i}of e)o+=`,${i}=${null!=(t=r[i])?t:""}`;let s=n()(o.substring(1)),c={};return window.byted_acrawler&&(c=null==(i=null==window?void 0:window.byted_acrawler)?void 0:i.frontierSign({"X-MS-STUB":s})),{signature:null!=(a=c["X-Bogus"])?a:""}}},521276:function(r,e,t){var i,n,a;i=0,n=function(r){var e,t,i,n,a,o,s,c,l,u,p,h,d,f,G,g,m,D;r.lib.Cipher||(i=(t=r.lib).Base,n=t.WordArray,a=t.BufferedBlockAlgorithm,(o=r.enc).Utf8,s=o.Base64,c=r.algo.EvpKDF,l=t.Cipher=a.extend({cfg:i.extend(),createEncryptor:function(r,e){return this.create(this._ENC_XFORM_MODE,r,e)},createDecryptor:function(r,e){return this.create(this._DEC_XFORM_MODE,r,e)},init:function(r,e,t){this.cfg=this.cfg.extend(t),this._xformMode=r,this._key=e,this.reset()},reset:function(){a.reset.call(this),this._doReset()},process:function(r){return this._append(r),this._process()},finalize:function(r){return r&&this._append(r),this._doFinalize()},keySize:4,ivSize:4,_ENC_XFORM_MODE:1,_DEC_XFORM_MODE:2,_createHelper:function(){function r(r){return"string"==typeof r?D:g}return function(e){return{encrypt:function(t,i,n){return r(i).encrypt(e,t,i,n)},decrypt:function(t,i,n){return r(i).decrypt(e,t,i,n)}}}}()}),t.StreamCipher=l.extend({_doFinalize:function(){return this._process(!0)},blockSize:1}),u=r.mode={},p=t.BlockCipherMode=i.extend({createEncryptor:function(r,e){return this.Encryptor.create(r,e)},createDecryptor:function(r,e){return this.Decryptor.create(r,e)},init:function(r,e){this._cipher=r,this._iv=e}}),h=u.CBC=function(){var r=p.extend();function e(r,e,t){var i,n=this._iv;n?(i=n,this._iv=void 0):i=this._prevBlock;for(var a=0;a<t;a++)r[e+a]^=i[a]}return r.Encryptor=r.extend({processBlock:function(r,t){var i=this._cipher,n=i.blockSize;e.call(this,r,t,n),i.encryptBlock(r,t),this._prevBlock=r.slice(t,t+n)}}),r.Decryptor=r.extend({processBlock:function(r,t){var i=this._cipher,n=i.blockSize,a=r.slice(t,t+n);i.decryptBlock(r,t),e.call(this,r,t,n),this._prevBlock=a}}),r}(),d=(r.pad={}).Pkcs7={pad:function(r,e){for(var t=4*e,i=t-r.sigBytes%t,a=i<<24|i<<16|i<<8|i,o=[],s=0;s<i;s+=4)o.push(a);var c=n.create(o,i);r.concat(c)},unpad:function(r){var e=255&r.words[r.sigBytes-1>>>2];r.sigBytes-=e}},t.BlockCipher=l.extend({cfg:l.cfg.extend({mode:h,padding:d}),reset:function(){l.reset.call(this);var r,e=this.cfg,t=e.iv,i=e.mode;this._xformMode==this._ENC_XFORM_MODE?r=i.createEncryptor:(r=i.createDecryptor,this._minBufferSize=1),this._mode&&this._mode.__creator==r?this._mode.init(this,t&&t.words):(this._mode=r.call(i,this,t&&t.words),this._mode.__creator=r)},_doProcessBlock:function(r,e){this._mode.processBlock(r,e)},_doFinalize:function(){var r,e=this.cfg.padding;return this._xformMode==this._ENC_XFORM_MODE?(e.pad(this._data,this.blockSize),r=this._process(!0)):(r=this._process(!0),e.unpad(r)),r},blockSize:4}),f=t.CipherParams=i.extend({init:function(r){this.mixIn(r)},toString:function(r){return(r||this.formatter).stringify(this)}}),G=(r.format={}).OpenSSL={stringify:function(r){var e,t=r.ciphertext,i=r.salt;return(e=i?n.create([1398893684,1701076831]).concat(i).concat(t):t).toString(s)},parse:function(r){var e,t=s.parse(r),i=t.words;return 1398893684==i[0]&&1701076831==i[1]&&(e=n.create(i.slice(2,4)),i.splice(0,4),t.sigBytes-=16),f.create({ciphertext:t,salt:e})}},g=t.SerializableCipher=i.extend({cfg:i.extend({format:G}),encrypt:function(r,e,t,i){i=this.cfg.extend(i);var n=r.createEncryptor(t,i),a=n.finalize(e),o=n.cfg;return f.create({ciphertext:a,key:t,iv:o.iv,algorithm:r,mode:o.mode,padding:o.padding,blockSize:r.blockSize,formatter:i.format})},decrypt:function(r,e,t,i){return i=this.cfg.extend(i),e=this._parse(e,i.format),r.createDecryptor(t,i).finalize(e.ciphertext)},_parse:function(r,e){return"string"==typeof r?e.parse(r,this):r}}),m=(r.kdf={}).OpenSSL={execute:function(r,e,t,i,a){if(!i&&(i=n.random(8)),a)var o=c.create({keySize:e+t,hasher:a}).compute(r,i);else var o=c.create({keySize:e+t}).compute(r,i);var s=n.create(o.words.slice(e),4*t);return o.sigBytes=4*e,f.create({key:o,iv:s,salt:i})}},D=t.PasswordBasedCipher=g.extend({cfg:g.cfg.extend({kdf:m}),encrypt:function(r,e,t,i){var n=(i=this.cfg.extend(i)).kdf.execute(t,r.keySize,r.ivSize,i.salt,i.hasher);i.iv=n.iv;var a=g.encrypt.call(this,r,e,n.key,i);return a.mixIn(n),a},decrypt:function(r,e,t,i){i=this.cfg.extend(i),e=this._parse(e,i.format);var n=i.kdf.execute(t,r.keySize,r.ivSize,e.salt,i.hasher);return i.iv=n.iv,g.decrypt.call(this,r,e,n.key,i)}}))},r.exports=n(t(616131),t(51890))},426271:function(r,e,t){"use strict";function i(r,e){for(var t=Math.abs(r).toString();t.length<e;)t="0"+t;return(r<0?"-":"")+t}t.d(e,{Z:function(){return i}})},810727:function(r,e,t){"use strict";t(529716),t(491199)},57025:function(r,e,t){var i=t(720832),n=t(96008),a=t(481611),o=i&&1/a(new i([,-0]))[1]==1/0?function(r){return new i(r)}:n;r.exports=o},806363:function(r,e,t){var i=t(967529),n=t(859104),a=t(605521),o=t(842454),s=t(603233),c=t(481611),l=i?i.prototype:void 0,u=l?l.valueOf:void 0;r.exports=function(r,e,t,i,l,p,h){switch(t){case"[object DataView]":if(r.byteLength!=e.byteLength||r.byteOffset!=e.byteOffset)break;r=r.buffer,e=e.buffer;case"[object ArrayBuffer]":if(r.byteLength!=e.byteLength||!p(new n(r),new n(e)))break;return!0;case"[object Boolean]":case"[object Date]":case"[object Number]":return a(+r,+e);case"[object Error]":return r.name==e.name&&r.message==e.message;case"[object RegExp]":case"[object String]":return r==e+"";case"[object Map]":var d=s;case"[object Set]":var f=1&i;if(d||(d=c),r.size!=e.size&&!f)break;var G=h.get(r);if(G)return G==e;i|=2,h.set(r,e);var g=o(d(r),d(e),i,l,p,h);return h.delete(r),g;case"[object Symbol]":if(u)return u.call(r)==u.call(e)}return!1}},82068:function(r){var e=Object.prototype.hasOwnProperty;r.exports=function(r){var t=r.length,i=new r.constructor(t);return t&&"string"==typeof r[0]&&e.call(r,"index")&&(i.index=r.index,i.input=r.input),i}},46e3:function(r,e,t){var i=t(694451),n=t(922080),a=t(193800);r.exports=function(){this.size=0,this.__data__={hash:new i,map:new(a||n),string:new i}}},641193:function(r,e,t){var i=t(663875),n=t(420669),a=t(760284),o=Math.max,s=Math.min;r.exports=function(r,e,t){var c=null==r?0:r.length;if(!c)return -1;var l=c-1;return void 0!==t&&(l=a(t),l=t<0?o(c+l,0):s(l,c-1)),i(r,n(e,3),l,!0)}},300277:function(r){r.exports=function(r){return void 0===r}},692983:function(r,e,t){var i=t(167807),n=t(760284);r.exports=function(r,e){return r&&r.length?i(r,n(e)):void 0}},688269:function(r,e,t){var i=t(893585)(function(r,e,t){return r+(t?"_":"")+e.toLowerCase()});r.exports=i},748845:function(r,e,t){var i=t(29093),n=t(730865),a=t(563e3),o=n(function(r,e){return a(r)?i(r,e):[]});r.exports=o},612361:function(r){"use strict";var e=Object.getOwnPropertySymbols,t=Object.prototype.hasOwnProperty,i=Object.prototype.propertyIsEnumerable;r.exports=!function(){try{if(!Object.assign)return!1;var r=new String("abc");if(r[5]="de","5"===Object.getOwnPropertyNames(r)[0])return!1;for(var e={},t=0;t<10;t++)e["_"+String.fromCharCode(t)]=t;var i=Object.getOwnPropertyNames(e).map(function(r){return e[r]});if("0123456789"!==i.join(""))return!1;var n={};if("abcdefghijklmnopqrst".split("").forEach(function(r){n[r]=r}),"abcdefghijklmnopqrst"!==Object.keys(Object.assign({},n)).join(""))return!1;return!0}catch(r){return!1}}()?function(r,n){for(var a,o,s=function(r){if(null==r)throw TypeError("Object.assign cannot be called with null or undefined");return Object(r)}(r),c=1;c<arguments.length;c++){for(var l in a=Object(arguments[c]),a)t.call(a,l)&&(s[l]=a[l]);if(e){o=e(a);for(var u=0;u<o.length;u++)i.call(a,o[u])&&(s[o[u]]=a[o[u]])}}return s}:Object.assign},634230:function(r,e,t){"use strict";var i=t(88648),n=t(266955),a="function"==typeof Object.is?Object.is:function(r,e){return r===e&&(0!==r||1/r==1/e)||r!=r&&e!=e},o=n.useSyncExternalStore,s=i.useRef,c=i.useEffect,l=i.useMemo,u=i.useDebugValue;e.useSyncExternalStoreWithSelector=function(r,e,t,i,n){var p=s(null);if(null===p.current){var h={hasValue:!1,value:null};p.current=h}else h=p.current;var d=o(r,(p=l(function(){function r(r){if(!c){if(c=!0,o=r,r=i(r),void 0!==n&&h.hasValue){var e=h.value;if(n(e,r))return s=e}return s=r}if(e=s,a(o,r))return e;var t=i(r);return void 0!==n&&n(e,t)?e:(o=r,s=t)}var o,s,c=!1,l=void 0===t?null:t;return[function(){return r(e())},null===l?void 0:function(){return r(l())}]},[e,t,i,n]))[0],p[1]);return c(function(){h.hasValue=!0,h.value=d},[d]),u(d),d}},50324:function(r,e,t){"use strict";t.d(e,{E7:function(){return o},FU:function(){return v},GS:function(){return _},HW:function(){return M},HX:function(){return m},Hr:function(){return A},Kn:function(){return E},Ku:function(){return a},MH:function(){return u},NH:function(){return i},NW:function(){return Z},Pl:function(){return I},Qw:function(){return G},RG:function(){return D},RS:function(){return X},Rc:function(){return y},SV:function(){return k},VF:function(){return R},W5:function(){return L},Z$:function(){return H},aH:function(){return d},ad:function(){return g},c3:function(){return f},hL:function(){return c},hs:function(){return p},ij:function(){return T},kL:function(){return l},km:function(){return U},lB:function(){return C},ly:function(){return w},mL:function(){return S},mW:function(){return N},ml:function(){return x},nc:function(){return b},o8:function(){return O},oi:function(){return n},ov:function(){return B},pg:function(){return W},pn:function(){return s},rQ:function(){return h},t6:function(){return P},td:function(){return F},xO:function(){return j},xf:function(){return V}});var i="play",n="playing",a="ended",o="pause",s="error",c="seeking",l="seeked",u="timeupdate",p="waiting",h="canplay",d="durationchange",f="loadeddata",G="loadedmetadata",g="progress",m="loadstart",D="emptied",v="focus",H="blur",y="ready",b="urlNull",I="autoplay_started",C="autoplay_was_prevented",w="complete",P="replay",E="destroy",T="urlchange",k="buffer_control",S="AbortError",x="fullscreen_request",_="fullscreen_change",M="cssFullscreen_change",R="mini_state_change",A="definition_change",O="after_definition_change",U="video_resize",L="pip_change",j="screenShot",N="playnext",W="xglog",V="user_action",F="reset",X="source_error",B="source_success",Z=["play","playing","ended","pause","error","seeking","seeked","timeupdate","waiting","canplay","canplaythrough","durationchange","volumechange","loadeddata","loadedmetadata","ratechange","progress","loadstart","emptied","stalled","suspend","abort","lowdecode","mseAttaching","mseAttached","mseDetaching","mseDetached"]},372817:function(r,e,t){"use strict";function i(r){return(i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(r){return typeof r}:function(r){return r&&"function"==typeof Symbol&&r.constructor===Symbol&&r!==Symbol.prototype?"symbol":typeof r})(r)}Object.defineProperty(e,"__esModule",{value:!0}),e.default=e.ErrorTypes=e.ERROR_TYPE_MAP=void 0;var n,a,o,s=l(t(888243)),c=l(t(256848));function l(r){return r&&r.__esModule?r:{default:r}}function u(r,e){for(var t=0;t<e.length;t++){var n=e[t];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(r,function(r){var e=function(r,e){if("object"!==i(r)||null===r)return r;var t=r[Symbol.toPrimitive];if(void 0!==t){var n=t.call(r,e||"default");if("object"!==i(n))return n;throw TypeError("@@toPrimitive must return a primitive value.")}return("string"===e?String:Number)(r)}(r,"string");return"symbol"===i(e)?e:String(e)}(n.key),n)}}e.ERROR_TYPE_MAP={1:"network",2:"network",3:"decoder",4:"format"};e.ErrorTypes={network:{code:1},mse:{code:2},parse:{code:3},format:{code:4},decoder:{code:5},runtime:{code:6},timeout:{code:7},other:{code:8}};var p=(n=function r(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{errorType:"",errorCode:0,errorMessage:"",originError:"",ext:{},mediaError:null,src:null};!function(r,e){if(!(r instanceof e))throw TypeError("Cannot call a class as a function")}(this,r);var i=e&&e.i18n?e.i18n.ERROR_TYPES:null;if(null!=e&&e.video){var n=t.mediaError?t.mediaError:e.video.error||{},a=e.duration,o=e.currentTime,l=e.ended,u=e.src,p=e.currentSrc,h=e.video,d=h.readyState,f=h.networkState,G={playerVersion:s.default,domain:document.domain,currentTime:o,duration:a,ended:l,readyState:d,networkState:f,src:t.src||u||p,errorType:t.errorType,errorCode:t.errorCode||n.code,message:t.errorMessage||n.message,mediaError:n,originError:t.originError?t.originError.stack:"",host:c.default.getHostFromUrl(u||p)};return t.ext&&Object.keys(t.ext).map(function(r){G[r]=t.ext[r]}),G}if(arguments.length>1){for(var g={playerVersion:s.default,domain:document.domain},m=["errorType","currentTime","duration","networkState","readyState","src","currentSrc","ended","errd","errorCode","mediaError"],D=0;D<arguments.length;D++)g[m[D]]=arguments[D];return g.ex=i?(i[arguments[0]]||{}).msg:"",g}},Object.defineProperty(n,"prototype",{writable:!1}),n);e.default=p},468311:function(r,e,t){"use strict";function i(r){return new Promise(function(e,t,i){(i=new XMLHttpRequest).open("GET",r,i.withCredentials=!0),i.onload=function(){200===i.status?e():t()},i.send()})}t.d(e,{f:function(){return u},s:function(){return l}}),t(675373),t(874386),t(209955),t(954372),t(826893),t(882732),t(544943),t(927234);var n,a="undefined"!=typeof document&&(n=document.createElement("link")).relList&&n.relList.supports&&n.relList.supports("prefetch")?function(r){return new Promise(function(e,t,i){(i=document.createElement("link")).rel="prefetch",i.href=r,i.onload=e,i.onerror=t,document.head.appendChild(i)})}:i,o=new Set,s=new Set;function c(r){if(r){if(r.saveData)return Error("Save-Data is enabled");if(/2g/.test(r.effectiveType))return Error("network conditions are poor")}return!0}function l(r,e,t){var n=c(navigator.connection);return n instanceof Error?Promise.reject(Error("Cannot prefetch, "+n.message)):(s.size,Promise.all([].concat(r).map(function(r){if(!o.has(r))return o.add(r),(e?function(r){return window.fetch?fetch(r,{credentials:"include"}):i(r)}:a)(new URL(r,location.href).toString())})))}function u(r,e){var t=c(navigator.connection);if(t instanceof Error)return Promise.reject(Error("Cannot prerender, "+t.message));if(!HTMLScriptElement.supports("speculationrules"))return l(r),Promise.reject(Error("This browser does not support the speculation rules API. Falling back to prefetch."));for(var i=0,n=[].concat(r);i<n.length;i+=1){var a=n[i];if(window.location.origin!==new URL(a,window.location.href).origin)return Promise.reject(Error("Only same origin URLs are allowed: "+a));s.add(a)}o.size;var u=function(r){var e=document.createElement("script");e.type="speculationrules",e.text='{"prerender":[{"source": "list","urls": ["'+Array.from(r).join('","')+'"]}]}';try{document.head.appendChild(e)}catch(r){return r}return!0}(s);return!0===u?Promise.resolve():Promise.reject(u)}},378407:function(r,e,t){"use strict";function i(){return(i=Object.assign?Object.assign.bind():function(r){for(var e=1;e<arguments.length;e++){var t=arguments[e];for(var i in t)({}).hasOwnProperty.call(t,i)&&(r[i]=t[i])}return r}).apply(null,arguments)}t.d(e,{Z:function(){return i}})},196764:function(r,e,t){"use strict";t.d(e,{Z:function(){return n}});var i=t(541378);function n(r,e){r.prototype=Object.create(e.prototype),r.prototype.constructor=r,(0,i.Z)(r,e)}},901737:function(r,e,t){"use strict";function i(r){try{return -1!==Function.toString.call(r).indexOf("[native code]")}catch(e){return"function"==typeof r}}t.d(e,{Z:function(){return i}})},845568:function(r,e,t){"use strict";function i(r){if(r)throw r}t.d(e,{N:function(){return i}})},751682:function(r,e,t){"use strict";t.d(e,{M:function(){return n}});var i=t(71016);class n extends i.T8{}n.Encryptor=class extends n{processBlock(r,e){let t=this._cipher,{blockSize:i}=t,n=this._iv,a=this._counter;n&&(this._counter=n.slice(0),a=this._counter,this._iv=void 0);let o=a.slice(0);t.encryptBlock(o,0),a[i-1]=a[i-1]+1|0;for(let t=0;t<i;t+=1)r[e+t]^=o[t]}},n.Decryptor=n.Encryptor},486810:function(r,e,t){"use strict";function i(r,e){let t={type:"element",tagName:"blockquote",properties:{},children:r.wrap(r.all(e),!0)};return r.patch(e,t),r.applyData(e,t)}t.d(e,{M:function(){return i}})}}]);
