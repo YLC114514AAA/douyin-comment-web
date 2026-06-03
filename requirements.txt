@@ -4,3 +4,5 @@ PyExecJS>=1.5.1
 cookiesparser
 customtkinter>=5.2.0
 CTkMessagebox>=2.7
+fastapi>=0.100.0
+uvicorn>=0.23.0
