@@ -34,11 +34,7 @@
     margin-bottom: 12px;
   }
   input:focus { outline: none; border-color: #FFD700; }
-  .hint {
-    color: #777;
-    font-size: 10px;
-    margin-bottom: 14px;
-  }
+  .hint { color: #777; font-size: 10px; margin-bottom: 14px; }
   button {
     background: #FFD700;
     color: #1a1a2e;
@@ -66,22 +62,17 @@
     display: none;
   }
   #logs:not(:empty) { display: block; }
-
-  /* -- 结果区 -- */
-  .result-comment { margin-bottom: 12px; padding: 4px 8px; border-radius: 4px; }
-  .target-highlight { background: #5A4500; }
-  .tree-line { color: #00CED1; font-weight: bold; font-size: 13px; }
+  .comment-row { padding: 3px 6px; border-radius: 3px; margin: 1px 0; }
+  .comment-text { color: #e0e0e0; font-size: 14px; line-height: 1.5; }
+  .tree-line { color: #00FFFF; font-weight: bold; font-size: 15px; }
   .user-name { color: #87CEEB; font-weight: bold; }
   .likes { color: #FF6B6B; font-weight: bold; }
   .time-ip { color: #888; font-size: 12px; }
-  .comment-text { color: #e0e0e0; margin: 3px 0 0 20px; font-size: 14px; line-height: 1.5; }
   .level-tag { color: #666; font-size: 10px; }
   .arrow-mark { color: #FF8C00; font-weight: bold; }
   .separator { color: #555; }
   .summary { font-size: 14px; font-weight: bold; color: #fff; }
-  .stat { color: #4FC3F7; }
   .circle-num { color: #FFA500; font-weight: bold; }
-  .err { color: #FF6B6B; }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #0f0f23; }
   ::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 3px; }
@@ -182,6 +173,7 @@ var CIRCLE = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩","⑪",
 function renderResult(data) {
   _circleIdx = -1;
   _circleMap = {};
+  var targets = data.targets || [];
   var container = document.getElementById("result");
   var h = '<div class="card">';
 
@@ -189,42 +181,47 @@ function renderResult(data) {
   h += '<div class="separator">' + repeat("─", 48) + '</div>';
   h += '<div><span class="summary">视频</span> <span class="time-ip">' + esc(data.video_url || "") + '</span></div>';
   h += '<div><span class="summary">时间</span> ' + esc(data.scraped_at || "") + '</div>';
-  h += '<div><span class="summary">查询</span> ' + esc((data.targets || []).join(", ")) + '</div>';
+  h += '<div><span class="summary">查询</span> ' + esc(targets.join(", ")) + '</div>';
 
-  var targets = data.targets || [];
-  var likes = 0;
-  var parentCount = 0, replyCount = 0;
-  for (var ci = 0; ci < (data.comments || []).length; ci++) {
-    var c = data.comments[ci];
-    assignCircles(c);
-    if (isTarget(c, targets)) { likes += c.digg_count || 0; parentCount++; }
-    collectTargetStats(c, targets);
-  }
-  function collectTargetStats(c, targets) {
-    for (var ri = 0; ri < (c.replies || []).length; ri++) {
-      var r = c.replies[ri];
-      if (isTarget(r, targets)) { likes += r.digg_count || 0; replyCount++; }
-      collectTargetStats(r, targets);
+  // 统计 + 序号（只给目标用户，靠位置判断层级）
+  var tLikes = 0, tParent = 0, tReply = 0;
+  function walkParent(items) {
+    for (var i = 0; i < items.length; i++) {
+      if (isTarget(items[i], targets)) {
+        _circleIdx++;
+        if (_circleIdx < CIRCLE.length) _circleMap[items[i].cid] = CIRCLE[_circleIdx];
+        tLikes += items[i].digg_count || 0;
+        tParent++;
+      }
+      walkReplies(items[i].replies || []);
     }
   }
-  h += '<div>一级评论 ' + parentCount + ' 条 · 二级回复 ' + replyCount + ' 条</div>';
-  h += '<div><span class="summary">目标用户评论总点赞数</span> <span class="likes">' + likes + '</span></div>';
+  function walkReplies(items) {
+    for (var i = 0; i < items.length; i++) {
+      if (isTarget(items[i], targets)) {
+        _circleIdx++;
+        if (_circleIdx < CIRCLE.length) _circleMap[items[i].cid] = CIRCLE[_circleIdx];
+        tLikes += items[i].digg_count || 0;
+        tReply++;
+      }
+      walkReplies(items[i].replies || []);
+    }
+  }
+  walkParent(data.comments || []);
+
+  h += '<div>一级评论 ' + tParent + ' 条 · 二级回复 ' + tReply + ' 条</div>';
+  h += '<div><span class="summary">目标用户评论总点赞数</span> <span class="likes">' + tLikes + '</span></div>';
   h += '<div class="separator">' + repeat("─", 48) + '</div>';
 
+  // 评论区
   for (var ci = 0; ci < (data.comments || []).length; ci++) {
-    h += renderComment(data.comments[ci], targets, "");
+    h += renderComment(data.comments[ci], targets, (ci === (data.comments || []).length - 1));
   }
 
-  var total = parentCount + replyCount;
-  h += '<div class="summary">◆ 目标用户共发 ' + parentCount + ' 条一级评论 + ' + replyCount + ' 条二级回复 = ' + total + ' 条，总点赞数 ' + likes + '</div>';
+  var total = tParent + tReply;
+  h += '<div class="summary">◆ 目标用户共发 ' + tParent + ' 条一级评论 + ' + tReply + ' 条二级回复 = ' + total + ' 条，总点赞数 ' + tLikes + '</div>';
   h += '</div>';
   container.innerHTML = h;
-}
-
-function assignCircles(c) {
-  _circleIdx++;
-  if (_circleIdx < CIRCLE.length) _circleMap[c.cid] = CIRCLE[_circleIdx];
-  for (var ri = 0; ri < (c.replies || []).length; ri++) assignCircles(c.replies[ri]);
 }
 
 function isTarget(c, targets) {
@@ -237,62 +234,67 @@ function isTarget(c, targets) {
   return false;
 }
 
-function renderComment(c, targets, indent) {
+// 扁平渲染 — 每行独立 div，不嵌套，背景不污染子行
+function renderComment(c, targets, isLastParent) {
   var me = isTarget(c, targets);
-  var hl = me ? ' target-highlight' : '';
   var arrow = me ? ' <span class="arrow-mark">◀</span>' : '';
   var circle = _circleMap[c.cid] || "";
+  var bg = me ? 'background:#5A4500;' : '';
 
-  var s = '<div class="result-comment' + hl + '">';
+  var s = '';
+  s += '<div class="comment-row" style="' + bg + '">';
   s += '<span class="likes">❤ ' + (c.digg_count || 0) + '</span> ';
   s += '<span class="time-ip">' + fmtTime(c.create_time) + ' IP:' + (c.ip_label || "-") + '</span>';
   if (circle) s += ' <span class="circle-num">' + circle + '</span>';
   s += ' <span class="level-tag">· 一级评论</span>' + arrow;
+  s += '</div>';
   s += '<div class="comment-text">' + esc(c.text || "") + '</div>';
 
-  // images
   var media = (c.images || []).concat(c.stickers || []);
   if (media.length > 0) {
     s += '<div style="margin-left:20px"><span class="time-ip">[查看图片 (' + media.length + '张)]</span></div>';
   }
 
   for (var ri = 0; ri < (c.replies || []).length; ri++) {
-    var r = c.replies[ri];
-    var last = ri === c.replies.length - 1;
-    s += renderReply(r, targets, indent, last, 1);
+    s += renderReply(c.replies[ri], targets, "", ri === c.replies.length - 1);
   }
-  s += '</div>';
+
+  if (!isLastParent) s += '<div style="height:8px"></div>';
   return s;
 }
 
-function renderReply(r, targets, indent, isLast, depth) {
+function renderReply(r, targets, indent, isLast) {
   var me = isTarget(r, targets);
-  var hl = me ? ' target-highlight' : '';
   var arrow = me ? ' <span class="arrow-mark">◀</span>' : '';
   var circle = _circleMap[r.cid] || "";
   var branch = isLast ? "└── " : "├── ";
-  var cont = isLast ? "    " : "│   ";
+  var cont  = isLast ? "    " : "│   ";
+  var bg = me ? 'background:#5A4500;' : '';
 
-  var s = '<div class="' + hl + '">';
+  var s = '';
+  // info 行
+  s += '<div class="comment-row" style="' + bg + '">';
   s += '<span class="tree-line">' + indent + branch + '</span>';
   s += '<span class="user-name">' + esc(r.nickname || "???") + '</span> ';
   s += '<span class="likes">❤ ' + (r.digg_count || 0) + '</span> ';
   s += '<span class="time-ip">' + fmtTime(r.create_time) + '</span>';
   if (circle) s += ' <span class="circle-num">' + circle + '</span>';
   s += ' <span class="level-tag">· 二级评论</span>' + arrow;
-  s += '<div class="comment-text">' + esc(r.text || "") + '</div>';
+  s += '</div>';
+  // 内容行
+  s += '<div style="margin-left:20px">';
+  s += '<span class="tree-line">' + indent + cont + '</span>';
+  s += '<span class="comment-text">' + esc(r.text || "") + '</span>';
+  s += '</div>';
 
   var media = (r.images || []).concat(r.stickers || []);
   if (media.length > 0) {
-    s += '<div style="margin-left:20px"><span class="time-ip">[查看图片 (' + media.length + '张)]</span></div>';
+    s += '<div style="margin-left:20px"><span class="tree-line">' + indent + cont + '</span><span class="time-ip">[查看图片 (' + media.length + '张)]</span></div>';
   }
 
   for (var ri = 0; ri < (r.replies || []).length; ri++) {
-    var sub = r.replies[ri];
-    var subLast = ri === r.replies.length - 1;
-    s += renderReply(sub, targets, indent + cont, subLast, depth + 1);
+    s += renderReply(r.replies[ri], targets, indent + cont, ri === r.replies.length - 1);
   }
-  s += '</div>';
   return s;
 }
 
@@ -305,15 +307,9 @@ function fmtTime(ts) {
 
 function pad(n) { return n < 10 ? "0" + n : String(n); }
 
-function repeat(s, n) {
-  var r = "";
-  for (var i = 0; i < n; i++) r += s;
-  return r;
-}
+function repeat(s, n) { var r = ""; for (var i = 0; i < n; i++) r += s; return r; }
 
-function esc(s) {
-  return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
+function esc(s) { return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 </script>
 
 </body>
