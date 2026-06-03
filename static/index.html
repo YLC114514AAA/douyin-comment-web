@@ -183,31 +183,23 @@ function renderResult(data) {
   h += '<div><span class="summary">时间</span> ' + esc(data.scraped_at || "") + '</div>';
   h += '<div><span class="summary">查询</span> ' + esc(targets.join(", ")) + '</div>';
 
-  // 统计 + 序号（只给目标用户，靠位置判断层级）
-  var tLikes = 0, tParent = 0, tReply = 0;
-  function walkParent(items) {
+  // 序号 — 只给目标用户分配
+  function walkAssign(items) {
     for (var i = 0; i < items.length; i++) {
-      if (isTarget(items[i], targets)) {
+      var c = items[i];
+      if (isTarget(c, targets)) {
         _circleIdx++;
-        if (_circleIdx < CIRCLE.length) _circleMap[items[i].cid] = CIRCLE[_circleIdx];
-        tLikes += items[i].digg_count || 0;
-        tParent++;
+        if (_circleIdx < CIRCLE.length) _circleMap[c.cid] = CIRCLE[_circleIdx];
       }
-      walkReplies(items[i].replies || []);
+      walkAssign(c.replies || []);
     }
   }
-  function walkReplies(items) {
-    for (var i = 0; i < items.length; i++) {
-      if (isTarget(items[i], targets)) {
-        _circleIdx++;
-        if (_circleIdx < CIRCLE.length) _circleMap[items[i].cid] = CIRCLE[_circleIdx];
-        tLikes += items[i].digg_count || 0;
-        tReply++;
-      }
-      walkReplies(items[i].replies || []);
-    }
-  }
-  walkParent(data.comments || []);
+  walkAssign(data.comments || []);
+
+  // 直接使用后端统计，不再自己算
+  var tParent = data.target_parent_count || 0;
+  var tReply  = data.target_reply_count || 0;
+  var tLikes  = data.target_likes || 0;
 
   h += '<div>一级评论 ' + tParent + ' 条 · 二级回复 ' + tReply + ' 条</div>';
   h += '<div><span class="summary">目标用户评论总点赞数</span> <span class="likes">' + tLikes + '</span></div>';
