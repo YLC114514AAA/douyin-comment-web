@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海森堡抖音评论查询</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    font-family: "Microsoft YaHei UI", "微软雅黑", sans-serif;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 20px;
+  }
+  h1 { color: #FFD700; text-align: center; font-size: 24px; margin-bottom: 4px; }
+  .subtitle { color: #888; text-align: center; font-size: 12px; margin-bottom: 20px; }
+  .card {
+    background: #16213e;
+    border: 1px solid #2a2a4a;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  input {
+    width: 100%;
+    background: #0f0f23;
+    border: 1px solid #2a2a4a;
+    color: #e0e0e0;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  input:focus { outline: none; border-color: #FFD700; }
+  .hint {
+    color: #777;
+    font-size: 10px;
+    margin-bottom: 14px;
+  }
+  button {
+    background: #FFD700;
+    color: #1a1a2e;
+    border: none;
+    padding: 10px 36px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:hover { background: #FFC107; }
+  button:disabled { background: #555; cursor: not-allowed; }
+  #status { color: #4FC3F7; font-size: 13px; margin-top: 10px; min-height: 18px; }
+  #logs {
+    background: #0f0f23;
+    border-radius: 6px;
+    padding: 14px;
+    max-height: 180px;
+    overflow-y: auto;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 11px;
+    color: #aaa;
+    white-space: pre-wrap;
+    margin-top: 8px;
+    display: none;
+  }
+  #logs:not(:empty) { display: block; }
+
+  /* -- 结果区 -- */
+  .result-comment { margin-bottom: 12px; padding: 4px 8px; border-radius: 4px; }
+  .target-highlight { background: #5A4500; }
+  .tree-line { color: #00CED1; font-weight: bold; font-size: 13px; }
+  .user-name { color: #87CEEB; font-weight: bold; }
+  .likes { color: #FF6B6B; font-weight: bold; }
+  .time-ip { color: #888; font-size: 12px; }
+  .comment-text { color: #e0e0e0; margin: 3px 0 0 20px; font-size: 14px; line-height: 1.5; }
+  .level-tag { color: #666; font-size: 10px; }
+  .arrow-mark { color: #FF8C00; font-weight: bold; }
+  .separator { color: #555; }
+  .summary { font-size: 14px; font-weight: bold; color: #fff; }
+  .stat { color: #4FC3F7; }
+  .circle-num { color: #FFA500; font-weight: bold; }
+  .err { color: #FF6B6B; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0f0f23; }
+  ::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<h1>海森堡抖音评论查询</h1>
+<p class="subtitle">粘贴抖音分享文案或视频链接，输入目标用户，即搜即得</p>
+
+<div class="card">
+  <input type="text" id="urlInput" placeholder="粘贴抖音分享文案或视频链接...">
+  <input type="text" id="targetsInput" placeholder="目标用户（抖音号 / UID / 昵称，逗号分隔）">
+  <div class="hint">快捷键提示：Ctrl+V 粘贴 | Ctrl+A 全选 | 一级评论 = 直接回复视频 | 二级评论 = 回复别人的回复</div>
+  <button id="submitBtn" onclick="submitTask()">开始查询</button>
+  <div id="status"></div>
+</div>
+
+<div id="logs"></div>
+<div id="result"></div>
+
+<script>
+var API = "";
+var pollTimer = null;
+
+function submitTask() {
+  var url = document.getElementById("urlInput").value.trim();
+  var targets = document.getElementById("targetsInput").value.trim();
+  if (!url) { alert("请输入视频链接"); return; }
+  if (!targets) { alert("请输入目标用户"); return; }
+
+  document.getElementById("submitBtn").disabled = true;
+  document.getElementById("status").innerText = "正在提交...";
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("logs").innerText = "";
+  document.getElementById("logs").style.display = "none";
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", API + "/api/crawl");
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onload = function() {
+    var data = JSON.parse(xhr.responseText);
+    if (data.error) { alert(data.error); resetBtn(); return; }
+    document.getElementById("status").innerText = "任务已提交，排队中...";
+    pollTimer = setInterval(function() { pollTask(data.task_id); }, 2000);
+  };
+  xhr.onerror = function() {
+    document.getElementById("status").innerText = "连接失败，请确认后端已启动 (python server.py)";
+    resetBtn();
+  };
+  xhr.send(JSON.stringify({url: url, targets: targets}));
+}
+
+function pollTask(taskId) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", API + "/api/task/" + taskId);
+  xhr.onload = function() {
+    var data = JSON.parse(xhr.responseText);
+    var st = "";
+    if (data.status === "queued") st = ("排队中 (前面还有 " + data.queue_position + " 人)...");
+    else if (data.status === "running") st = "正在爬取...";
+    else if (data.status === "done") st = "完成!";
+    else if (data.status === "failed") st = "失败: " + (data.error || "");
+    document.getElementById("status").innerText = st;
+
+    if (data.logs && data.logs.length > 0) {
+      document.getElementById("logs").style.display = "block";
+      document.getElementById("logs").innerText = data.logs.join("\n");
+    }
+
+    if (data.status === "done" && data.result) {
+      clearInterval(pollTimer);
+      renderResult(data.result);
+      resetBtn();
+    }
+    if (data.status === "failed") {
+      clearInterval(pollTimer);
+      resetBtn();
+    }
+  };
+  xhr.onerror = function() {
+    document.getElementById("status").innerText = "连接断开，请刷新";
+    clearInterval(pollTimer);
+    resetBtn();
+  };
+  xhr.send();
+}
+
+function resetBtn() {
+  document.getElementById("submitBtn").disabled = false;
+}
+
+// ===================== 结果渲染 =====================
+
+var _circleIdx, _circleMap;
+var CIRCLE = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩","⑪","⑫","⑬","⑭","⑮","⑯","⑰","⑱","⑲","⑳"];
+
+function renderResult(data) {
+  _circleIdx = -1;
+  _circleMap = {};
+  var container = document.getElementById("result");
+  var h = '<div class="card">';
+
+  h += '<div class="summary">◆ 海森堡抖音评论查询结果</div>';
+  h += '<div class="separator">' + repeat("─", 48) + '</div>';
+  h += '<div><span class="summary">视频</span> <span class="time-ip">' + esc(data.video_url || "") + '</span></div>';
+  h += '<div><span class="summary">时间</span> ' + esc(data.scraped_at || "") + '</div>';
+  h += '<div><span class="summary">查询</span> ' + esc((data.targets || []).join(", ")) + '</div>';
+
+  var targets = data.targets || [];
+  var likes = 0;
+  var parentCount = 0, replyCount = 0;
+  for (var ci = 0; ci < (data.comments || []).length; ci++) {
+    var c = data.comments[ci];
+    assignCircles(c);
+    if (isTarget(c, targets)) { likes += c.digg_count || 0; parentCount++; }
+    collectTargetStats(c, targets);
+  }
+  function collectTargetStats(c, targets) {
+    for (var ri = 0; ri < (c.replies || []).length; ri++) {
+      var r = c.replies[ri];
+      if (isTarget(r, targets)) { likes += r.digg_count || 0; replyCount++; }
+      collectTargetStats(r, targets);
+    }
+  }
+  h += '<div>一级评论 ' + parentCount + ' 条 · 二级回复 ' + replyCount + ' 条</div>';
+  h += '<div><span class="summary">目标用户评论总点赞数</span> <span class="likes">' + likes + '</span></div>';
+  h += '<div class="separator">' + repeat("─", 48) + '</div>';
+
+  for (var ci = 0; ci < (data.comments || []).length; ci++) {
+    h += renderComment(data.comments[ci], targets, "");
+  }
+
+  var total = parentCount + replyCount;
+  h += '<div class="summary">◆ 目标用户共发 ' + parentCount + ' 条一级评论 + ' + replyCount + ' 条二级回复 = ' + total + ' 条，总点赞数 ' + likes + '</div>';
+  h += '</div>';
+  container.innerHTML = h;
+}
+
+function assignCircles(c) {
+  _circleIdx++;
+  if (_circleIdx < CIRCLE.length) _circleMap[c.cid] = CIRCLE[_circleIdx];
+  for (var ri = 0; ri < (c.replies || []).length; ri++) assignCircles(c.replies[ri]);
+}
+
+function isTarget(c, targets) {
+  var tSet = {};
+  for (var i = 0; i < targets.length; i++) tSet[String(targets[i]).toLowerCase()] = true;
+  var vals = [c.unique_id, c.uid, c.short_id, c.nickname];
+  for (var i = 0; i < vals.length; i++) {
+    if (vals[i] && tSet[String(vals[i]).toLowerCase()]) return true;
+  }
+  return false;
+}
+
+function renderComment(c, targets, indent) {
+  var me = isTarget(c, targets);
+  var hl = me ? ' target-highlight' : '';
+  var arrow = me ? ' <span class="arrow-mark">◀</span>' : '';
+  var circle = _circleMap[c.cid] || "";
+
+  var s = '<div class="result-comment' + hl + '">';
+  s += '<span class="likes">❤ ' + (c.digg_count || 0) + '</span> ';
+  s += '<span class="time-ip">' + fmtTime(c.create_time) + ' IP:' + (c.ip_label || "-") + '</span>';
+  if (circle) s += ' <span class="circle-num">' + circle + '</span>';
+  s += ' <span class="level-tag">· 一级评论</span>' + arrow;
+  s += '<div class="comment-text">' + esc(c.text || "") + '</div>';
+
+  // images
+  var media = (c.images || []).concat(c.stickers || []);
+  if (media.length > 0) {
+    s += '<div style="margin-left:20px"><span class="time-ip">[查看图片 (' + media.length + '张)]</span></div>';
+  }
+
+  for (var ri = 0; ri < (c.replies || []).length; ri++) {
+    var r = c.replies[ri];
+    var last = ri === c.replies.length - 1;
+    s += renderReply(r, targets, indent, last, 1);
+  }
+  s += '</div>';
+  return s;
+}
+
+function renderReply(r, targets, indent, isLast, depth) {
+  var me = isTarget(r, targets);
+  var hl = me ? ' target-highlight' : '';
+  var arrow = me ? ' <span class="arrow-mark">◀</span>' : '';
+  var circle = _circleMap[r.cid] || "";
+  var branch = isLast ? "└── " : "├── ";
+  var cont = isLast ? "    " : "│   ";
+
+  var s = '<div class="' + hl + '">';
+  s += '<span class="tree-line">' + indent + branch + '</span>';
+  s += '<span class="user-name">' + esc(r.nickname || "???") + '</span> ';
+  s += '<span class="likes">❤ ' + (r.digg_count || 0) + '</span> ';
+  s += '<span class="time-ip">' + fmtTime(r.create_time) + '</span>';
+  if (circle) s += ' <span class="circle-num">' + circle + '</span>';
+  s += ' <span class="level-tag">· 二级评论</span>' + arrow;
+  s += '<div class="comment-text">' + esc(r.text || "") + '</div>';
+
+  var media = (r.images || []).concat(r.stickers || []);
+  if (media.length > 0) {
+    s += '<div style="margin-left:20px"><span class="time-ip">[查看图片 (' + media.length + '张)]</span></div>';
+  }
+
+  for (var ri = 0; ri < (r.replies || []).length; ri++) {
+    var sub = r.replies[ri];
+    var subLast = ri === r.replies.length - 1;
+    s += renderReply(sub, targets, indent + cont, subLast, depth + 1);
+  }
+  s += '</div>';
+  return s;
+}
+
+function fmtTime(ts) {
+  if (!ts) return "未知";
+  var d = new Date(ts * 1000);
+  return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()) + " " +
+         pad(d.getHours()) + ":" + pad(d.getMinutes());
+}
+
+function pad(n) { return n < 10 ? "0" + n : String(n); }
+
+function repeat(s, n) {
+  var r = "";
+  for (var i = 0; i < n; i++) r += s;
+  return r;
+}
+
+function esc(s) {
+  return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+</script>
+
+</body>
+</html>
