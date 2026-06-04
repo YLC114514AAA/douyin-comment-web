@@ -252,7 +252,7 @@ function renderComment(c, targets, isLastParent) {
 
   var media = (c.images || []).concat(c.stickers || []);
   if (media.length > 0) {
-    s += '<div style="margin-left:20px"><span class="time-ip">[查看图片 (' + media.length + '张)]</span></div>';
+    s += '<div><span class="time-ip">[查看图片 (' + media.length + '张)]</span></div>';
   }
 
   for (var ri = 0; ri < (c.replies || []).length; ri++) {
@@ -281,15 +281,15 @@ function renderReply(r, targets, indent, isLast) {
   if (circle) s += ' <span class="circle-num">' + circle + '</span>';
   s += ' <span class="level-tag">· 二级评论</span>' + arrow;
   s += '</div>';
-  // 内容行
-  s += '<div style="margin-left:20px">';
+  // 内容行 — 靠树线文本缩进，不用 CSS margin
+  s += '<div>';
   s += '<span class="tree-line">' + indent + cont + '</span>';
   s += '<span class="comment-text">' + esc(r.text || "") + '</span>';
   s += '</div>';
 
   var media = (r.images || []).concat(r.stickers || []);
   if (media.length > 0) {
-    s += '<div style="margin-left:20px"><span class="tree-line">' + indent + cont + '</span><span class="time-ip">[查看图片 (' + media.length + '张)]</span></div>';
+    s += '<div><span class="tree-line">' + indent + cont + '</span><span class="time-ip">[查看图片 (' + media.length + '张)]</span></div>';
   }
 
   for (var ri = 0; ri < (r.replies || []).length; ri++) {
