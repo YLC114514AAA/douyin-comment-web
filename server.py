@@ -73,32 +73,6 @@ def _run_crawl_task(task_id: str, url: str, targets: list[str]):
             return
 
         filtered = filter_by_douyin_id(all_comments, targets)
-
-        # 后端精确统计（对标 GUI 版 compute_stats）
-        target_set = {t.strip().lower() for t in targets if t.strip()}
-        def _is_target_item(c):
-            return bool({
-                str(c.get("unique_id") or "").lower(),
-                str(c.get("uid") or "").lower(),
-                str(c.get("short_id") or "").lower(),
-                str(c.get("nickname") or "").lower(),
-            } & target_set)
-
-        t_parent = 0
-        t_reply = 0
-        t_likes = 0
-        def _walk_stats(items, is_reply):
-            nonlocal t_parent, t_reply, t_likes
-            for item in items:
-                if _is_target_item(item):
-                    t_likes += item.get("digg_count", 0)
-                    if is_reply:
-                        t_reply += 1
-                    else:
-                        t_parent += 1
-                _walk_stats(item.get("replies") or [], True)
-        _walk_stats(filtered, False)
-
         matched_replies = sum(len(c.get("replies") or []) for c in filtered)
         total_matched = len(filtered) + matched_replies
 
@@ -110,9 +84,6 @@ def _run_crawl_task(task_id: str, url: str, targets: list[str]):
             "matched_parent": len(filtered),
             "matched_replies": matched_replies,
             "total_matched": total_matched,
-            "target_parent_count": t_parent,
-            "target_reply_count": t_reply,
-            "target_likes": t_likes,
             "comments": filtered,
             "scraped_at": datetime.now(timezone(timedelta(hours=8))).isoformat(),
         }
