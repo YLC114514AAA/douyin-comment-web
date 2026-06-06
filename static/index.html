@@ -76,6 +76,11 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #0f0f23; }
   ::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 3px; }
+  .img-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; flex-direction:column; }
+  .img-modal img { max-width:85vw; max-height:75vh; border-radius:8px; }
+  .img-modal .close-btn { position:absolute; top:16px; right:24px; font-size:28px; color:#fff; cursor:pointer; }
+  .img-modal .nav-btn { color:#FFD700; font-size:18px; cursor:pointer; padding:10px 20px; user-select:none; }
+  .img-modal .info { color:#aaa; font-size:13px; margin:8px 0; }
 </style>
 </head>
 <body>
@@ -93,6 +98,16 @@
 
 <div id="logs"></div>
 <div id="result"></div>
+
+<div class="img-modal" id="imgModal">
+  <span class="close-btn" id="imgClose">&times;</span>
+  <img id="imgView" src="" alt="">
+  <div class="info" id="imgInfo"></div>
+  <div>
+    <span class="nav-btn" id="imgPrev">&lt; 上一张</span>
+    <span class="nav-btn" id="imgNext">下一张 &gt;</span>
+  </div>
+</div>
 
 <script>
 var API = "";
@@ -167,12 +182,13 @@ function resetBtn() {
 
 // ===================== 结果渲染 =====================
 
-var _circleIdx, _circleMap;
+var _circleIdx, _circleMap, _imgStore;
 var CIRCLE = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩","⑪","⑫","⑬","⑭","⑮","⑯","⑰","⑱","⑲","⑳"];
 
 function renderResult(data) {
   _circleIdx = -1;
   _circleMap = {};
+  _imgStore = [];
   var targets = data.targets || [];
   var container = document.getElementById("result");
   var h = '<div class="card">';
@@ -239,10 +255,11 @@ function renderComment(c, targets, isLastParent) {
   var me = isTarget(c, targets);
   var arrow = me ? ' <span class="arrow-mark">◀</span>' : '';
   var circle = _circleMap[c.cid] || "";
-  var bg = me ? 'background:#5A4500;' : '';
+  var bg = me ? 'background:#5A4500;border-radius:4px;' : '';
 
   var s = '';
-  s += '<div class="comment-row" style="' + bg + '">';
+  s += '<div style="' + bg + '">';
+  s += '<div class="comment-row">';
   s += '<span class="likes">❤ ' + (c.digg_count || 0) + '</span> ';
   s += '<span class="time-ip">' + fmtTime(c.create_time) + ' IP:' + (c.ip_label || "-") + '</span>';
   if (circle) s += ' <span class="circle-num">' + circle + '</span>';
@@ -252,8 +269,11 @@ function renderComment(c, targets, isLastParent) {
 
   var media = (c.images || []).concat(c.stickers || []);
   if (media.length > 0) {
-    s += '<div><span class="time-ip">[查看图片 (' + media.length + '张)]</span></div>';
+    var imgIdx = _imgStore.length;
+    _imgStore.push(media);
+    s += '<div><span class="time-ip" style="color:#4FC3F7;cursor:pointer;text-decoration:underline" onclick="openViewer(' + imgIdx + ')">[查看图片 (' + media.length + '张)]</span></div>';
   }
+  s += '</div>';
 
   for (var ri = 0; ri < (c.replies || []).length; ri++) {
     s += renderReply(c.replies[ri], targets, "", ri === c.replies.length - 1);
@@ -269,11 +289,11 @@ function renderReply(r, targets, indent, isLast) {
   var circle = _circleMap[r.cid] || "";
   var branch = isLast ? "└── " : "├── ";
   var cont  = isLast ? "    " : "│   ";
-  var bg = me ? 'background:#5A4500;' : '';
+  var bg = me ? 'background:#5A4500;border-radius:4px;' : '';
 
   var s = '';
-  // info 行
-  s += '<div class="comment-row" style="' + bg + '">';
+  s += '<div style="' + bg + '">';
+  s += '<div class="comment-row">';
   s += '<span class="tree-line">' + indent + branch + '</span>';
   s += '<span class="user-name">' + esc(r.nickname || "???") + '</span> ';
   s += '<span class="likes">❤ ' + (r.digg_count || 0) + '</span> ';
@@ -281,7 +301,6 @@ function renderReply(r, targets, indent, isLast) {
   if (circle) s += ' <span class="circle-num">' + circle + '</span>';
   s += ' <span class="level-tag">· 二级评论</span>' + arrow;
   s += '</div>';
-  // 内容行 — 靠树线文本缩进，不用 CSS margin
   s += '<div>';
   s += '<span class="tree-line">' + indent + cont + '</span>';
   s += '<span class="comment-text">' + esc(r.text || "") + '</span>';
@@ -289,8 +308,11 @@ function renderReply(r, targets, indent, isLast) {
 
   var media = (r.images || []).concat(r.stickers || []);
   if (media.length > 0) {
-    s += '<div><span class="tree-line">' + indent + cont + '</span><span class="time-ip">[查看图片 (' + media.length + '张)]</span></div>';
+    var imgIdx = _imgStore.length;
+    _imgStore.push(media);
+    s += '<div><span class="tree-line">' + indent + cont + '</span><span class="time-ip" style="color:#4FC3F7;cursor:pointer;text-decoration:underline" onclick="openViewer(' + imgIdx + ')">[查看图片 (' + media.length + '张)]</span></div>';
   }
+  s += '</div>';
 
   for (var ri = 0; ri < (r.replies || []).length; ri++) {
     s += renderReply(r.replies[ri], targets, indent + cont, ri === r.replies.length - 1);
@@ -310,6 +332,29 @@ function pad(n) { return n < 10 ? "0" + n : String(n); }
 function repeat(s, n) { var r = ""; for (var i = 0; i < n; i++) r += s; return r; }
 
 function esc(s) { return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+// ===================== 图片预览 =====================
+function openViewer(idx) {
+  var urls = _imgStore[idx] || [];
+  if (!urls.length) return;
+  var cur = 0;
+  var modal = document.getElementById("imgModal");
+  var img = document.getElementById("imgView");
+  var info = document.getElementById("imgInfo");
+
+  function show(i) {
+    cur = i;
+    img.src = urls[cur];
+    info.innerText = ("第 " + (cur+1) + " / " + urls.length + " 张");
+  }
+  show(0);
+  modal.style.display = "flex";
+
+  document.getElementById("imgPrev").onclick = function() { show((cur - 1 + urls.length) % urls.length); };
+  document.getElementById("imgNext").onclick = function() { show((cur + 1) % urls.length); };
+  document.getElementById("imgClose").onclick = function() { modal.style.display = "none"; };
+  modal.onclick = function(e) { if (e.target === modal) modal.style.display = "none"; };
+}
 </script>
 
 </body>
