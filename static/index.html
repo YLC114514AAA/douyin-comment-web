@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>海森堡抖音评论查询</title>
+  <link rel="icon" href="/favicon.jpg" type="image/jpeg">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -14,7 +15,8 @@
     margin: 0 auto;
     padding: 24px 20px;
   }
-  h1 { color: #FFD700; text-align: center; font-size: 24px; margin-bottom: 4px; }
+  h1 { color: #FFD700; text-align: center; font-size: 24px; margin-bottom: 4px;
+       text-shadow: 0 0 20px rgba(255,215,0,0.4), 0 0 40px rgba(255,215,0,0.15); }
   .subtitle { color: #888; text-align: center; font-size: 12px; margin-bottom: 20px; }
   .card {
     background: #16213e;
@@ -22,7 +24,9 @@
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 14px;
+    transition: box-shadow 0.3s;
   }
+  .card:hover { box-shadow: 0 0 12px rgba(255,215,0,0.08); }
   input {
     width: 100%;
     background: #0f0f23;
@@ -86,7 +90,18 @@
   .auth-msg.error { color:#FF6B6B; }
   .auth-msg.ok { color:#4FC3F7; }
 
+  .contact-sidebar {
+    position:fixed; right:16px; top:50%; transform:translateY(-50%); z-index:100;
+    background:rgba(22,33,62,0.92); border:1px solid #5A4500; border-radius:10px;
+    padding:14px 16px; font-size:12px; color:#aaa; text-align:center; max-width:155px;
+  }
+  .contact-sidebar h4 { color:#FFD700; margin-bottom:8px; font-size:13px; }
+  .contact-sidebar a { color:#4FC3F7; text-decoration:none; word-break:break-all; }
+  .contact-sidebar a:hover { text-decoration:underline; }
+  .tip-msg { color:#FFA500; font-size:12px; font-style:italic; margin-top:6px; min-height:18px; }
+
   /* 手机端适配 */
+  @media (max-width: 900px) { .contact-sidebar { display:none; } }
   @media (max-width: 768px) {
     body { padding: 14px 12px; }
     h1 { font-size: 18px; }
@@ -158,10 +173,16 @@
     <div class="hint">快捷键提示：Ctrl+V 粘贴 | Ctrl+A 全选 | 一级评论 = 直接回复视频 | 二级评论 = 回复别人的回复</div>
     <button id="submitBtn" onclick="submitTask()">开始查询</button>
     <div id="status"></div>
+    <div class="tip-msg" id="tipMsg"></div>
   </div>
 
   <div id="logs"></div>
   <div id="result"></div>
+</div>
+
+<div class="contact-sidebar" id="contactSidebar">
+  <h4>📧 联系我</h4>
+  <a href="mailto:1715198225@qq.com">1715198225<br>@qq.com</a>
 </div>
 
 <div class="img-modal" id="imgModal">
@@ -177,6 +198,19 @@
 <script>
 var API = "";
 var pollTimer = null;
+var tipTimer = null;
+var TIPS = [
+  "评论区内容较多，深度扫描中...",
+  "检测到大量回复，正在追踪每一条~",
+  "目标用户正在被定位中...",
+  "数据找到了，正在整理结果~",
+  "稍安勿躁，好东西值得等待~",
+  "评论有点多，请耐心等待哦~",
+  "正在逐一核对用户身份...",
+  "回复链比较长，逐一展开中...",
+  "快了快了，数据马上就好~",
+  "海森堡正在努力工作中..."
+];
 var AUTH_TOKEN = localStorage.getItem("hsb_token") || "";
 
 // ===================== 认证 =====================
@@ -361,6 +395,7 @@ function submitTask() {
     var data = JSON.parse(xhr.responseText);
     if (data.error) { alert(data.error); resetBtn(); return; }
     document.getElementById("status").innerText = "任务已提交，排队中...";
+    startTips();
     pollTimer = setInterval(function() { pollTask(data.task_id); }, 2000);
   };
   xhr.onerror = function() {
@@ -390,11 +425,15 @@ function pollTask(taskId) {
 
     if (data.status === "done" && data.result) {
       clearInterval(pollTimer);
+      clearInterval(tipTimer);
+      document.getElementById("tipMsg").innerText = "";
       renderResult(data.result);
       resetBtn();
     }
     if (data.status === "failed") {
       clearInterval(pollTimer);
+      clearInterval(tipTimer);
+      document.getElementById("tipMsg").innerText = "";
       resetBtn();
     }
   };
@@ -404,6 +443,13 @@ function pollTask(taskId) {
     resetBtn();
   };
   xhr.send();
+}
+
+function startTips() {
+  document.getElementById("tipMsg").innerText = TIPS[Math.floor(Math.random() * TIPS.length)];
+  tipTimer = setInterval(function() {
+    document.getElementById("tipMsg").innerText = TIPS[Math.floor(Math.random() * TIPS.length)];
+  }, 6000);
 }
 
 function resetBtn() {
