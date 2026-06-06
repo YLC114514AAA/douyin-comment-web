@@ -151,7 +151,7 @@ async def api_crawl(request: Request):
 
 @app.get("/api/task/{task_id}")
 @require_auth
-async def api_task(task_id: str):
+async def api_task(request: Request, task_id: str):
     with _lock:
         task = _tasks.get(task_id)
 
