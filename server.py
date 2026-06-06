@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from crawler import DouyinCommentCrawler
 from output import filter_by_douyin_id
+from auth import register_auth_routes, require_auth
 
 app = FastAPI(title="海森堡抖音评论查询")
 
@@ -114,6 +115,7 @@ def _run_crawl_task(task_id: str, url: str, targets: list[str]):
 # ======================== API 路由 ========================
 
 @app.post("/api/crawl")
+@require_auth
 async def api_crawl(request: Request):
     body = await request.json()
     url = (body.get("url") or "").strip()
@@ -148,6 +150,7 @@ async def api_crawl(request: Request):
 
 
 @app.get("/api/task/{task_id}")
+@require_auth
 async def api_task(task_id: str):
     with _lock:
         task = _tasks.get(task_id)
@@ -175,6 +178,9 @@ async def api_task(task_id: str):
         "error": task["error"],
     })
 
+
+# 注册 auth 路由（必须在 static mount 之前）
+register_auth_routes(app)
 
 # 前端静态文件
 app.mount("/", StaticFiles(directory="static", html=True), name="static")

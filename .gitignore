@@ -2,3 +2,5 @@ browser_data/
 output/
 __pycache__/
 *.pyc
+email_config.json
+users.db
