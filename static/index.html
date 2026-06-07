@@ -140,9 +140,10 @@
   <div style="position:relative;text-align:center;margin-bottom:10px;">
     <img src="/favicon.jpg" style="width:48px;height:48px;border-radius:50%;vertical-align:middle;margin-right:10px;">
     <h1 style="display:inline;margin-bottom:0;vertical-align:middle;">海森堡抖音评论查询</h1>
-    <div style="position:absolute;right:0;top:4px;">
-      <span id="userDisplay" style="color:#9CA3AF;font-size:12px;margin-right:12px;"></span>
-      <a href="#" onclick="doLogout()" style="color:#F87171;font-size:12px;">退出</a>
+    <div style="position:absolute;right:0;top:4px;text-align:center;">
+      <img src="/hhhylc2.jpg" style="width:40px;height:40px;border-radius:50%;display:block;margin:0 auto 4px;">
+      <span id="userDisplay" style="color:#9CA3AF;font-size:11px;display:block;"></span>
+      <a href="#" onclick="doLogout()" style="color:#F87171;font-size:11px;">退出登录</a>
     </div>
   </div>
   <p class="subtitle">粘贴抖音分享文案或视频链接，输入目标用户，即搜即得</p>
@@ -157,9 +158,11 @@
       <input type="text" id="targetsInput" placeholder="抖音号 / UID / 昵称，逗号分隔">
     </div>
     <div class="hint">Ctrl+V 粘贴 · Ctrl+A 全选 · 一级评论 = 直接回复视频 · 二级评论 = 回复别人的回复</div>
-    <button id="submitBtn" onclick="submitTask()">开始查询</button>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button id="submitBtn" onclick="submitTask()">开始查询</button>
+      <span style="color:#6B7280;font-size:11px;">联系我 · 1715198225@qq.com</span>
+    </div>
     <div id="status"></div>
-    <div class="tip-msg" id="tipMsg"></div>
   </div>
 
   <div id="logs"></div>
