@@ -8,115 +8,92 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #1a1a2e;
-    color: #e0e0e0;
-    font-family: "Microsoft YaHei UI", "微软雅黑", sans-serif;
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 24px 20px;
+    background: #121826;
+    color: #F1F5F9;
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei UI", sans-serif;
+    max-width: 920px; margin: 0 auto; padding: 32px 20px;
   }
-  h1 { color: #4FC3F7; text-align: center; font-size: 24px; margin-bottom: 4px; }
-  .subtitle { color: #888; text-align: center; font-size: 12px; margin-bottom: 20px; }
+  h1 { color: #F1F5F9; text-align: center; font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { color: #9CA3AF; text-align: center; font-size: 13px; margin-bottom: 24px; }
   .card {
-    background: #16213e;
-    border: 1px solid #2a2a4a;
+    background: #1F2937;
+    border: 1px solid #374151;
     border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 14px;
-    transition: box-shadow 0.3s;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   }
-  .card:hover { box-shadow: 0 0 12px rgba(79,195,247,0.1); }
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block; color: #F1F5F9; font-size: 13px; font-weight: 500;
+    margin-bottom: 6px;
+  }
   input {
     width: 100%;
-    background: #0f0f23;
-    border: 1px solid #2a2a4a;
-    color: #e0e0e0;
-    padding: 10px 12px;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-bottom: 12px;
+    background: #121826; border: 1px solid #374151;
+    color: #F1F5F9; padding: 10px 14px; border-radius: 8px;
+    font-size: 14px; outline: none;
+    transition: border-color 0.2s;
   }
-  input:focus { outline: none; border-color: #4FC3F7; }
-  .hint { color: #777; font-size: 10px; margin-bottom: 14px; }
+  input:focus { border-color: #0EA5E9; }
   button {
-    background: #4FC3F7;
-    color: #0a0a1a;
-    border: none;
-    padding: 10px 36px;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
+    background: #0EA5E9; color: #fff; border: none;
+    padding: 10px 36px; border-radius: 8px; font-size: 15px;
+    font-weight: 500; cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: background 0.2s, box-shadow 0.2s;
   }
-  button:hover { background: #81D4FA; }
-  button:disabled { background: #555; cursor: not-allowed; }
-  #status { color: #4FC3F7; font-size: 13px; margin-top: 10px; min-height: 18px; }
+  button:hover { background: #0284C7; box-shadow: 0 2px 6px rgba(0,0,0,0.35); }
+  button:disabled { background: #374151; color: #9CA3AF; cursor: not-allowed; box-shadow: none; }
+  #status { color: #0EA5E9; font-size: 13px; margin-top: 12px; min-height: 18px; }
+  .hint { color: #9CA3AF; font-size: 11px; text-align: center; margin-bottom: 16px; }
   #logs {
-    background: #0f0f23;
-    border-radius: 6px;
-    padding: 14px;
-    max-height: 180px;
-    overflow-y: auto;
-    font-family: Consolas, "Courier New", monospace;
-    font-size: 11px;
-    color: #aaa;
-    white-space: pre-wrap;
-    margin-top: 8px;
+    background: #1F2937; border: 1px solid #374151; border-radius: 8px;
+    padding: 14px; max-height: 180px; overflow-y: auto;
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: 12px; color: #9CA3AF; white-space: pre-wrap; margin-top: 8px;
     display: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   }
   #logs:not(:empty) { display: block; }
-  .comment-row { padding: 3px 6px; border-radius: 3px; margin: 1px 0; }
-  .comment-text { color: #e0e0e0; font-size: 14px; line-height: 1.5; }
-  .tree-line { color: #4FC3F7; font-weight: bold; font-size: 15px; white-space: pre; }
-  .user-name { color: #87CEEB; font-weight: bold; }
-  .likes { color: #FF6B6B; font-weight: bold; }
-  .time-ip { color: #888; font-size: 12px; }
-  .level-tag { color: #666; font-size: 10px; }
-  .arrow-mark { color: #4FC3F7; font-weight: bold; }
-  .separator { color: #3a3a5a; }
-  .summary { font-size: 14px; font-weight: bold; color: #4FC3F7; }
-  .circle-num { color: #4FC3F7; font-weight: bold; }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #0f0f23; }
-  ::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 3px; }
-  .img-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; flex-direction:column; }
+  .comment-row { padding: 3px 6px; margin: 1px 0; }
+  .comment-text { color: #F1F5F9; font-size: 14px; line-height: 1.5; margin: 4px 0 0 20px; }
+  .tree-line { color: #0EA5E9; font-weight: bold; font-size: 15px; white-space: pre; }
+  .user-name { color: #60A5FA; font-weight: 600; }
+  .likes { color: #F87171; font-weight: 600; }
+  .time-ip { color: #9CA3AF; font-size: 12px; }
+  .level-tag { color: #6B7280; font-size: 10px; }
+  .arrow-mark { color: #0EA5E9; font-weight: bold; }
+  .separator { color: #374151; }
+  .summary { font-size: 14px; font-weight: 600; color: #F1F5F9; }
+  .circle-num { color: #0EA5E9; font-weight: bold; }
+  .img-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.9); z-index:9999;
+    justify-content:center; align-items:center; flex-direction:column; }
   .img-modal img { max-width:85vw; max-height:75vh; border-radius:8px; }
   .img-modal .close-btn { position:absolute; top:16px; right:24px; font-size:28px; color:#fff; cursor:pointer; }
-  .img-modal .nav-btn { color:#4FC3F7; font-size:18px; cursor:pointer; padding:10px 20px; user-select:none; }
-  .img-modal .info { color:#aaa; font-size:13px; margin:8px 0; }
-  .auth-title { font-size:18px; font-weight:bold; color:#4FC3F7; margin-bottom:16px; text-align:center; }
+  .img-modal .nav-btn { color:#0EA5E9; font-size:16px; cursor:pointer; padding:10px 20px; user-select:none; }
+  .img-modal .info { color:#9CA3AF; font-size:13px; margin:8px 0; }
+  .auth-title { font-size:18px; font-weight:600; color:#F1F5F9; margin-bottom:16px; text-align:center; }
   .auth-msg { margin-top:8px; font-size:12px; text-align:center; }
-  .auth-msg.error { color:#FF6B6B; }
-  .auth-msg.ok { color:#4FC3F7; }
-
-  .contact-sidebar {
-    position:fixed; right:40px; top:50%; transform:translateY(-50%); z-index:100;
-    background:rgba(22,33,62,0.92); border:1px solid #1a4a6e; border-radius:10px;
-    padding:16px 20px; font-size:13px; color:#ccc; text-align:center; min-width:170px;
-  }
-  .contact-sidebar h4 { color:#4FC3F7; margin-bottom:10px; font-size:15px; }
-  .contact-sidebar a { color:#4FC3F7; text-decoration:none; word-break:break-all; }
-  .contact-sidebar a:hover { text-decoration:underline; }
-  .tip-msg { color:#aaa; font-size:12px; font-style:italic; margin-top:6px; min-height:18px; }
-
-  /* 手机端适配 */
-  @media (max-width: 900px) { .contact-sidebar { display:none; } }
+  .auth-msg.error { color:#F87171; }
+  .auth-msg.ok { color:#34D399; }
+  .auth-link { color:#0EA5E9; cursor:pointer; text-decoration:none; }
+  .auth-link:hover { text-decoration:underline; }
+  .auth-footer { text-align:center; margin-top:10px; font-size:12px; color:#9CA3AF; }
+  .site-footer { text-align:center; padding: 24px 0 8px; color: #6B7280; font-size: 12px; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #121826; }
+  ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
   @media (max-width: 768px) {
-    body { padding: 14px 12px; }
+    body { padding: 16px 12px; }
     h1 { font-size: 18px; }
-    .subtitle { font-size: 11px; margin-bottom: 14px; }
-    .card { padding: 14px; margin-bottom: 10px; }
-    input { padding: 12px 10px; font-size: 16px; }
-    button { width: 100%; padding: 12px 0; font-size: 16px; }
-    #status { font-size: 12px; }
-    #logs { max-height: 120px; font-size: 10px; }
-    .comment-row { padding: 2px 4px; }
+    .card { padding: 16px; }
+    input { font-size: 16px; }
+    button { width: 100%; }
     .comment-text { font-size: 13px; }
     .tree-line { font-size: 13px; }
-    .time-ip { font-size: 11px; }
-    .summary { font-size: 13px; }
     .img-modal img { max-width:95vw; max-height:70vh; }
-    .img-modal .nav-btn { font-size:16px; padding:8px 14px; }
   }
 </style>
 </head>
@@ -124,7 +101,10 @@
 
 <!-- ==================== 登录/注册页 ==================== -->
 <div id="authPage">
-  <h1>海森堡抖音评论查询</h1>
+  <div style="text-align:center;margin-bottom:8px;">
+    <img src="/favicon.jpg" style="width:48px;height:48px;border-radius:50%;vertical-align:middle;margin-right:10px;">
+    <h1 style="display:inline;vertical-align:middle;">海森堡抖音评论查询</h1>
+  </div>
   <p class="subtitle">登录后即可使用</p>
 
   <div class="card" id="loginForm">
@@ -132,10 +112,10 @@
     <input type="email" id="loginEmail" placeholder="邮箱">
     <input type="password" id="loginPassword" placeholder="密码">
     <button onclick="submitLogin()">登录</button>
-    <p style="text-align:center;margin-top:10px;font-size:12px;color:#888;">
-      没有账号？<a href="#" onclick="showRegister()" style="color:#4FC3F7;">立即注册</a>
+    <p class="auth-footer">
+      没有账号？<a href="#" onclick="showRegister()" class="auth-link">立即注册</a>
     </p>
-    <div id="loginMsg" style="margin-top:8px;font-size:12px;"></div>
+    <div id="loginMsg" class="auth-msg"></div>
   </div>
 
   <div class="card" id="registerForm" style="display:none;">
@@ -148,28 +128,35 @@
       <input type="text" id="regCode" placeholder="输入6位验证码" maxlength="6">
       <button onclick="submitRegisterStep2()">完成注册</button>
     </div>
-    <p style="text-align:center;margin-top:10px;font-size:12px;color:#888;">
-      已有账号？<a href="#" onclick="showLogin()" style="color:#4FC3F7;">去登录</a>
+    <p class="auth-footer">
+      已有账号？<a href="#" onclick="showLogin()" class="auth-link">去登录</a>
     </p>
-    <div id="regMsg" style="margin-top:8px;font-size:12px;"></div>
+    <div id="regMsg" class="auth-msg"></div>
   </div>
 </div>
 
 <!-- ==================== 查询主页 ==================== -->
 <div id="mainPage" style="display:none;">
   <div style="position:relative;text-align:center;margin-bottom:10px;">
-    <h1 style="margin-bottom:0;">海森堡抖音评论查询</h1>
+    <img src="/favicon.jpg" style="width:48px;height:48px;border-radius:50%;vertical-align:middle;margin-right:10px;">
+    <h1 style="display:inline;margin-bottom:0;vertical-align:middle;">海森堡抖音评论查询</h1>
     <div style="position:absolute;right:0;top:4px;">
-      <span id="userDisplay" style="color:#888;font-size:12px;margin-right:12px;"></span>
-      <a href="#" onclick="doLogout()" style="color:#FF6B6B;font-size:12px;">退出</a>
+      <span id="userDisplay" style="color:#9CA3AF;font-size:12px;margin-right:12px;"></span>
+      <a href="#" onclick="doLogout()" style="color:#F87171;font-size:12px;">退出</a>
     </div>
   </div>
   <p class="subtitle">粘贴抖音分享文案或视频链接，输入目标用户，即搜即得</p>
 
   <div class="card">
-    <input type="text" id="urlInput" placeholder="粘贴抖音分享文案或视频链接...">
-    <input type="text" id="targetsInput" placeholder="目标用户（抖音号 / UID / 昵称，逗号分隔）">
-    <div class="hint">快捷键提示：Ctrl+V 粘贴 | Ctrl+A 全选 | 一级评论 = 直接回复视频 | 二级评论 = 回复别人的回复</div>
+    <div class="field">
+      <label>视频链接</label>
+      <input type="text" id="urlInput" placeholder="粘贴抖音分享文案或视频链接...">
+    </div>
+    <div class="field">
+      <label>目标用户</label>
+      <input type="text" id="targetsInput" placeholder="抖音号 / UID / 昵称，逗号分隔">
+    </div>
+    <div class="hint">Ctrl+V 粘贴 · Ctrl+A 全选 · 一级评论 = 直接回复视频 · 二级评论 = 回复别人的回复</div>
     <button id="submitBtn" onclick="submitTask()">开始查询</button>
     <div id="status"></div>
     <div class="tip-msg" id="tipMsg"></div>
@@ -179,10 +166,7 @@
   <div id="result"></div>
 </div>
 
-<div class="contact-sidebar" id="contactSidebar">
-  <h4>📧 联系我</h4>
-  <div style="color:#aaa;font-size:13px;">1715198225@qq.com</div>
-</div>
+<div class="site-footer">联系我 · 1715198225@qq.com</div>
 
 <div class="img-modal" id="imgModal">
   <span class="close-btn" id="imgClose">&times;</span>
@@ -546,7 +530,7 @@ function renderComment(c, targets, isLastParent) {
   if (media.length > 0) {
     var imgIdx = _imgStore.length;
     _imgStore.push(media);
-    s += '<div><span class="time-ip" style="color:#4FC3F7;cursor:pointer;text-decoration:underline" onclick="openViewer(' + imgIdx + ')">[查看图片 (' + media.length + '张)]</span></div>';
+    s += '<div><span class="time-ip" style="color:#0EA5E9;cursor:pointer;text-decoration:underline" onclick="openViewer(' + imgIdx + ')">[查看图片 (' + media.length + '张)]</span></div>';
   }
   s += '</div>';
 
@@ -585,7 +569,7 @@ function renderReply(r, targets, indent, isLast) {
   if (media.length > 0) {
     var imgIdx = _imgStore.length;
     _imgStore.push(media);
-    s += '<div><span class="tree-line">' + indent + cont + '</span><span class="time-ip" style="color:#4FC3F7;cursor:pointer;text-decoration:underline" onclick="openViewer(' + imgIdx + ')">[查看图片 (' + media.length + '张)]</span></div>';
+    s += '<div><span class="tree-line">' + indent + cont + '</span><span class="time-ip" style="color:#0EA5E9;cursor:pointer;text-decoration:underline" onclick="openViewer(' + imgIdx + ')">[查看图片 (' + media.length + '张)]</span></div>';
   }
   s += '</div>';
 
