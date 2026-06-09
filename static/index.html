@@ -163,6 +163,7 @@
       <span style="color:#6B7280;font-size:11px;">联系我 · 1715198225@qq.com</span>
     </div>
     <div id="status"></div>
+    <div id="tipMsg" style="color:#FCD34D;font-size:12px;margin-top:6px;min-height:18px;"></div>
   </div>
 
   <div id="logs"></div>
@@ -186,16 +187,41 @@ var API = "";
 var pollTimer = null;
 var tipTimer = null;
 var TIPS = [
-  "评论区内容较多，深度扫描中...",
-  "检测到大量回复，正在追踪每一条~",
-  "目标用户正在被定位中...",
-  "数据找到了，正在整理结果~",
-  "稍安勿躁，好东西值得等待~",
-  "评论有点多，请耐心等待哦~",
-  "正在逐一核对用户身份...",
-  "回复链比较长，逐一展开中...",
-  "快了快了，数据马上就好~",
-  "海森堡正在努力工作中..."
+  "评论区内容有点多，正在努力翻找中~ 🌸",
+  "发现好多回复，正一条条追踪呢~",
+  "目标用户已锁定，马上找到TA的发言~",
+  "数据已经在路上啦，喝杯奶茶等等哦 🧋",
+  "好东西值得等待，稍安勿躁呀~",
+  "评论太多了啦，让我喘口气~ 💨",
+  "正在认真核对每一条发言...",
+  "快了快了，结果马上就好~ ✨",
+  "海森堡正在评论区加班中...",
+  "别急别急，数据跑不掉的~ 🏃",
+  "翻评论区就像寻宝一样~ 💎",
+  "正在帮你整理数据小本本~ 📝",
+  "稍等一下下就好，真的快了~",
+  "评论区好热闹，一条条帮你找~",
+  "努力加载中，谢谢你等我呀~ 💕"
+];
+var QUEUE_TIPS = [
+  "前面还有{N}位，马上轮到你啦~ 🌸",
+  "你排在第{N}位，先喝杯奶茶等等吧~ 🧋",
+  "队伍在动啦！前面还剩{N}位...",
+  "还有{N}位就到你啦，别走开哦~",
+  "排队中...前面{N}位，我在努力啦~",
+  "第{N}个就是你，坚持一下下~",
+  "快了快了，前面只剩{N}位啦~ 🎉",
+  "队伍虽长但是我很快的~ 前面{N}位",
+];
+var RUNNING_TIPS = [
+  "正在帮你翻评论区啦~ 🕵️",
+  "目标评论已在路上~ ✨",
+  "数据找到了，正在整理中... 📋",
+  "评论正在打包，马上送到~ 🎁",
+  "海森堡正在努力工作中...",
+  "快好了快好了，再等一下下~",
+  "抓到目标用户啦，正在整理数据~",
+  "评论区扫描中，请稍候~",
 ];
 var AUTH_TOKEN = localStorage.getItem("hsb_token") || "";
 
@@ -398,10 +424,28 @@ function pollTask(taskId) {
   xhr.onload = function() {
     var data = JSON.parse(xhr.responseText);
     var st = "";
-    if (data.status === "queued") st = ("排队中 (前面还有 " + data.queue_position + " 人)...");
-    else if (data.status === "running") st = "正在爬取...";
-    else if (data.status === "done") st = "完成!";
-    else if (data.status === "failed") st = "失败: " + (data.error || "");
+    if (data.status === "queued") {
+      var pos = data.queue_position || 1;
+      st = "排队中 · 前面还有 " + pos + " 人";
+      // 排队时用排队专属用语
+      var qt = QUEUE_TIPS[Math.floor(Math.random() * QUEUE_TIPS.length)];
+      var el = document.getElementById("tipMsg");
+      if (el) el.innerText = qt.replace("{N}", pos);
+    } else if (data.status === "running") {
+      st = "正在爬取中...";
+      // 爬取中随机换可爱用语
+      var rt = RUNNING_TIPS[Math.floor(Math.random() * RUNNING_TIPS.length)];
+      var el = document.getElementById("tipMsg");
+      if (el) el.innerText = rt;
+    } else if (data.status === "done") {
+      st = "查询完成! 🎉";
+      var el = document.getElementById("tipMsg");
+      if (el) el.innerText = "";
+    } else if (data.status === "failed") {
+      st = "失败: " + (data.error || "");
+      var el = document.getElementById("tipMsg");
+      if (el) el.innerText = "";
+    }
     document.getElementById("status").innerText = st;
 
     if (data.logs && data.logs.length > 0) {
@@ -412,14 +456,12 @@ function pollTask(taskId) {
     if (data.status === "done" && data.result) {
       clearInterval(pollTimer);
       clearInterval(tipTimer);
-      document.getElementById("tipMsg").innerText = "";
       renderResult(data.result);
       resetBtn();
     }
     if (data.status === "failed") {
       clearInterval(pollTimer);
       clearInterval(tipTimer);
-      document.getElementById("tipMsg").innerText = "";
       resetBtn();
     }
   };
@@ -432,10 +474,23 @@ function pollTask(taskId) {
 }
 
 function startTips() {
-  document.getElementById("tipMsg").innerText = TIPS[Math.floor(Math.random() * TIPS.length)];
+  var el = document.getElementById("tipMsg");
+  if (el) el.innerText = "";
   tipTimer = setInterval(function() {
-    document.getElementById("tipMsg").innerText = TIPS[Math.floor(Math.random() * TIPS.length)];
-  }, 6000);
+    // 只在排队或运行中时更新（status 里有对应文字的才更新）
+    var s = document.getElementById("status").innerText;
+    if (s.indexOf("排队") >= 0) {
+      var m = s.match(/(\d+)/);
+      var n = m ? m[1] : "?";
+      var qt = QUEUE_TIPS[Math.floor(Math.random() * QUEUE_TIPS.length)];
+      var e = document.getElementById("tipMsg");
+      if (e) e.innerText = qt.replace("{N}", n);
+    } else if (s.indexOf("爬取") >= 0) {
+      var rt = RUNNING_TIPS[Math.floor(Math.random() * RUNNING_TIPS.length)];
+      var e = document.getElementById("tipMsg");
+      if (e) e.innerText = rt;
+    }
+  }, 5000);
 }
 
 function resetBtn() {

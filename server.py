@@ -8,7 +8,6 @@ import os
 import sys
 import threading
 import uuid
-from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone, timedelta
 
 from fastapi import FastAPI, Request
@@ -25,10 +24,10 @@ from auth import register_auth_routes, require_auth
 
 app = FastAPI(title="海森堡抖音评论查询")
 
-# 任务存储
+# 任务存储 + 并发控制
 _tasks: dict[str, dict] = {}
-_executor = ThreadPoolExecutor(max_workers=2)
 _lock = threading.Lock()
+_semaphore = threading.BoundedSemaphore(4)  # 最多同时 4 个任务
 
 
 def _enqueue_task(url: str, targets: list[str]) -> str:
@@ -43,13 +42,18 @@ def _enqueue_task(url: str, targets: list[str]) -> str:
             "result": None,
             "error": None,
         }
-    _executor.submit(_run_crawl_task, task_id, url, targets)
+    t = threading.Thread(target=_run_crawl_task, args=(task_id, url, targets), daemon=True)
+    t.start()
     return task_id
 
 
 def _run_crawl_task(task_id: str, url: str, targets: list[str]):
+    # 等信号量（排队 + 限并发）
+    _semaphore.acquire()
+
     with _lock:
-        _tasks[task_id]["status"] = "running"
+        if task_id in _tasks:
+            _tasks[task_id]["status"] = "running"
 
     log_buffer = io.StringIO()
     old_stdout = sys.stdout
@@ -64,13 +68,15 @@ def _run_crawl_task(task_id: str, url: str, targets: list[str]):
         total_replies = sum(len(c.get("replies") or []) for c in all_comments)
 
         with _lock:
-            _tasks[task_id]["progress"]["parent_total"] = len(all_comments)
-            _tasks[task_id]["progress"]["replies_total"] = total_replies
+            if task_id in _tasks:
+                _tasks[task_id]["progress"]["parent_total"] = len(all_comments)
+                _tasks[task_id]["progress"]["replies_total"] = total_replies
 
         if not all_comments:
             with _lock:
-                _tasks[task_id]["status"] = "done"
-                _tasks[task_id]["result"] = {"matched": [], "video_url": video_url}
+                if task_id in _tasks:
+                    _tasks[task_id]["status"] = "done"
+                    _tasks[task_id]["result"] = {"matched": [], "video_url": video_url}
             return
 
         filtered = filter_by_douyin_id(all_comments, targets)
@@ -90,26 +96,30 @@ def _run_crawl_task(task_id: str, url: str, targets: list[str]):
         }
 
         with _lock:
-            _tasks[task_id]["status"] = "done"
-            _tasks[task_id]["result"] = result
+            if task_id in _tasks:
+                _tasks[task_id]["status"] = "done"
+                _tasks[task_id]["result"] = result
 
     except Exception as e:
         with _lock:
-            _tasks[task_id]["status"] = "failed"
-            _tasks[task_id]["error"] = str(e)
+            if task_id in _tasks:
+                _tasks[task_id]["status"] = "failed"
+                _tasks[task_id]["error"] = str(e)
 
     finally:
         sys.stdout = old_stdout
         captured = log_buffer.getvalue()
         lines = [l.strip() for l in captured.splitlines() if l.strip()]
         with _lock:
-            _tasks[task_id]["logs"].extend(lines)
+            if task_id in _tasks:
+                _tasks[task_id]["logs"].extend(lines)
         log_buffer.close()
         if crawler:
             try:
                 crawler.close()
             except Exception:
                 pass
+        _semaphore.release()
 
 
 # ======================== API 路由 ========================
