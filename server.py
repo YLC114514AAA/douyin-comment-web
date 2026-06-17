@@ -61,7 +61,7 @@ def _run_crawl_task(task_id: str, url: str, targets: list[str]):
 
     crawler = None
     try:
-        crawler = DouyinCommentCrawler(headless=False)
+        crawler = DouyinCommentCrawler(headless=True)
         video_url, api_comments, dom_comments = crawler.crawl(url)
 
         all_comments = api_comments if api_comments else dom_comments

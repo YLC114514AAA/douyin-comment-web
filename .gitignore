@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 email_config.json
 users.db
+douyin_cookies.json

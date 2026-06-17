@@ -6,6 +6,7 @@
 """
 
 import json
+import os
 import re
 import time
 
@@ -60,6 +61,16 @@ class DouyinCommentCrawler:
             user_agent=config.USER_AGENT,
             locale="zh-CN",
         )
+        # 注入本地导出的 Cookie（解决 Windows/Linux 登录态不互通问题）
+        cookie_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "douyin_cookies.json")
+        if os.path.exists(cookie_file):
+            try:
+                with open(cookie_file, "r", encoding="utf-8") as f:
+                    cookies = json.load(f)
+                self.context.add_cookies(cookies)
+                print(f"[信息] 已注入 {len(cookies)} 个 Cookie")
+            except Exception as e:
+                print(f"[警告] Cookie 注入失败: {e}")
         page = self.context.new_page()
 
         # ---- 在导航之前就注册拦截器 ----
